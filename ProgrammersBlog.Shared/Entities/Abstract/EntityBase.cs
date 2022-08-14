@@ -14,8 +14,9 @@ namespace ProgrammersBlog.Shared.Entities.Abstract
         public virtual DateTime ModifiedDate { get; set; } = DateTime.Now;
         public virtual bool IsDeleted { get; set; } = false; //bir şey oluşturduğum anda "silinmedi" cevabını vermek için 'false' olarak belirttik.
         public virtual bool IsActive { get; set; } = true;
-        public virtual string CreatedByName { get; set; }
-        public virtual string ModifiedByName { get; set; }
+        public virtual string CreatedByName { get; set; } = "Admin";
+        public virtual string ModifiedByName { get; set; } = "Admin";
         //her ikisini de string olarak belirtmemizin sebebi kayıt olma durumunun olmaması.
+        public virtual string Note { get; set; }
     }
 }

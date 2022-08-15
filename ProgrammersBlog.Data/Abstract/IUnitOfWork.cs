@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProgrammersBlog.Data.Abstract
 {
-    public interface IUnitOfWork:IDisposable
+    public interface IUnitOfWork:IAsyncDisposable
     {
         //UnitOfWork sayesinde tüm repository'lerimizi tek bir yerden kontrol etmemizi sağlıyor olucaz.
         //burada EntityFramework yapısına bağımlı kalmıyor olucaz. ado.net ya da dapper yapısı da kullanıyor olsak bu UnitOfWork yapısını kullanabiliriz.
@@ -21,7 +21,6 @@ namespace ProgrammersBlog.Data.Abstract
         _unitOfWork.Users.AddAsync(user);
         _unitOfWork.SaveAsync();
         ->> herhangi birinde hata olursa tüm işlemler geri alınır.
-
         */
     }
 }

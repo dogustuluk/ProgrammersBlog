@@ -12,6 +12,8 @@ namespace ProgrammersBlog.Data.Concrete.EntityFramework.Repositories
 {
     public class EfArticleRepository : EfEntityRepositoryBase<Article>, IArticleRepository
     {
+   
+
         public EfArticleRepository(DbContext context) : base(context)
         {
             //eğer IArticleRepository'den ek özellikler eklemek istersek kullanmamız gerekeceği için ekledik.

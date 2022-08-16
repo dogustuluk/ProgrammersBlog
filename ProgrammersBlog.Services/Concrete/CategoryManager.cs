@@ -84,9 +84,15 @@ namespace ProgrammersBlog.Services.Concrete
             return new DataResult<IList<Category>>(ResultStatus.Error, "Herhangi bir kategori bulunamadı", null);
         }
 
-        public Task<IResult> HardDelete(int categoryId)
+        public async Task<IResult> HardDelete(int categoryId)
         {
-            throw new NotImplementedException();
+            var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId);
+            if (category != null)
+            {
+                await _unitOfWork.Categories.DeleteAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+                return new Result(ResultStatus.Success, $"{category.Name} adlı kategori kalıcı olarak silindi!");
+            }
+            return new Result(ResultStatus.Error, "Böyle bir kategori bulunamadı");
         }
 
         public async Task<IResult> Update(CategoryUpdateDto categoryUpdateDto, string modifiedByName)

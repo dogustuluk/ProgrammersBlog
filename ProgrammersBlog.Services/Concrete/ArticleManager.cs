@@ -1,4 +1,5 @@
 ﻿using ProgrammersBlog.Data.Abstract;
+using ProgrammersBlog.Entities.Concrete;
 using ProgrammersBlog.Entities.Dtos;
 using ProgrammersBlog.Services.Abstract;
 using ProgrammersBlog.Shared.Utilities.Results.Abstract;
@@ -46,24 +47,65 @@ namespace ProgrammersBlog.Services.Concrete
 
         }
 
-        public Task<IDataResult<ArticleListDto>> GetAll()
+        public async Task<IDataResult<ArticleListDto>> GetAll()
         {
-            throw new NotImplementedException();
+            var articles = await _unitOfWork.Articles.GetAllAsync(null, a => a.User, a => a.Category);
+            if (articles.Count > -1)
+            {
+                return new DataResult<ArticleListDto>(ResultStatus.Success, new ArticleListDto
+                {
+                    Articles = articles,
+                    ResultStatus= ResultStatus.Success
+                });
+            }
+            return new DataResult<ArticleListDto>(ResultStatus.Error, "Herhangi bir makale bulunamadı", null);
         }
 
-        public Task<IDataResult<ArticleListDto>> GetAllByCategory(int categoryId)
+        public async Task<IDataResult<ArticleListDto>> GetAllByCategory(int categoryId)
         {
-            throw new NotImplementedException();
+            var result = await _unitOfWork.Categories.AnyAsync(c => c.Id == categoryId);
+            if (result)
+            {
+                var articles = await _unitOfWork.Articles.GetAllAsync(a => a.CategoryId == categoryId && !a.IsDeleted && a.IsActive, a => a.User, a => a.Category);
+                if (articles.Count > -1)
+                {
+                    return new DataResult<ArticleListDto>(ResultStatus.Success, new ArticleListDto
+                    {
+                        Articles = articles,
+                        ResultStatus = ResultStatus.Success
+                    });
+                }
+                return new DataResult<ArticleListDto>(ResultStatus.Error, "İstenen kategoride herhangi bir makale bulunamadı!", null);
+            }
+            return new DataResult<ArticleListDto>(ResultStatus.Error, "İstenen kategori bulunamadı", null);
         }
 
-        public Task<IDataResult<ArticleListDto>> GetAllByNonDeleted()
+        public async Task<IDataResult<ArticleListDto>> GetAllByNonDeleted()
         {
-            throw new NotImplementedException();
+            var articles = await _unitOfWork.Articles.GetAllAsync(a => !a.IsDeleted, a => a.User, a => a.Category);
+            if (articles.Count > -1)
+            {
+                return new DataResult<ArticleListDto>(ResultStatus.Success, new ArticleListDto
+                {
+                    Articles = articles,
+                    ResultStatus = ResultStatus.Success
+                });
+            }
+            return new DataResult<ArticleListDto>(ResultStatus.Error, "Herhangi bir silinmemiş makale bulunamadı", null);
         }
 
-        public Task<IDataResult<ArticleListDto>> GetAllByNonDeletedAndActive()
+        public async Task<IDataResult<ArticleListDto>> GetAllByNonDeletedAndActive()
         {
-            throw new NotImplementedException();
+            var articles = await _unitOfWork.Articles.GetAllAsync(a => !a.IsDeleted && a.IsActive, a => a.User, a => a.Category);
+            if (articles.Count > -1)
+            {
+                return new DataResult<ArticleListDto>(ResultStatus.Success, new ArticleListDto
+                {
+                    Articles = articles,
+                    ResultStatus = ResultStatus.Success
+                });
+            }
+            return new DataResult<ArticleListDto>(ResultStatus.Error, "Herhangi bir silinmemiş ve aktif olan bir makale bulunamadı", null);
         }
 
         public Task<IResult> HardDelete(int articleId)

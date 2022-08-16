@@ -80,9 +80,23 @@ namespace ProgrammersBlog.Services.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<IResult> Update(CategoryUpdateDto categoryUpdateDto, string modifiedByName)
+        public async Task<IResult> Update(CategoryUpdateDto categoryUpdateDto, string modifiedByName)
         {
-            throw new NotImplementedException();
+            var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryUpdateDto.Id);
+            if (category != null)
+            {
+                category.Name = categoryUpdateDto.Name;
+                category.Description = categoryUpdateDto.Description;
+                category.Note = categoryUpdateDto.Note;
+                category.IsActive = categoryUpdateDto.IsActive;
+                category.IsDeleted = categoryUpdateDto.IsDeleted;
+                category.ModifiedByName = modifiedByName;
+                category.ModifiedDate = DateTime.Now;
+                await _unitOfWork.Categories.UpdateAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+                return new Result(ResultStatus.Success, $"{categoryUpdateDto.Name} adlı kategori başarıyla güncellenmitir.");
+            }
+            return new Result(ResultStatus.Error, "Böyle bir kategori bulunamadı!");
+            
         }
     }
 }

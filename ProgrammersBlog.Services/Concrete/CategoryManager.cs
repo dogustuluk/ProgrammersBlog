@@ -22,9 +22,22 @@ namespace ProgrammersBlog.Services.Concrete
             _unitOfWork = unitOfWork;
         }
 
-        public Task<IResult> Add(CategoryAddDto categoryAddDto, string createdByName)
+        public async Task<IResult> Add(CategoryAddDto categoryAddDto, string createdByName)
         {
-            throw new NotImplementedException();
+            await _unitOfWork.Categories.AddAsync(new Category
+            {
+                Name = categoryAddDto.Name,
+                Description = categoryAddDto.Description,
+                Note = categoryAddDto.Note,
+                IsActive = categoryAddDto.IsActive,
+                CreatedByName = createdByName,
+                CreatedDate = DateTime.Now,
+                ModifiedByName = createdByName,
+                ModifiedDate = DateTime.Now,
+                IsDeleted = false
+            }).ContinueWith(t => _unitOfWork.SaveAsync()); //bu işlem daha veri tabanına kaydedilmeden biz frontend kısmına dönmüş olmamız mümkün olacak. performans kazandırırken yönetimini zorlaştırıyor olacak.
+            //await _unitOfWork.SaveAsync(); //-> yukarıda ContinueWith ile daha hızlı bir şekilde buradaki işlemi yapabiliriz. 
+            return new Result(ResultStatus.Success, $"{categoryAddDto.Name} adlı kategori başarılı bir şekilde eklenmiştir.");
         }
 
         public Task<IResult> Delete(int categoryId)

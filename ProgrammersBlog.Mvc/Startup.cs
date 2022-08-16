@@ -17,6 +17,8 @@ namespace ProgrammersBlog.Mvc
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews().AddRazorRuntimeCompilation(); //runtimecompilation ile frontend kýsmýnda deðiþiklikler yaptýðýmýzda uygulamayý tekrardan derlememize gerek kalmýyor.
+            services.AddAutoMapper(typeof(Startup));//derlenme esnasýnda automapper'ýn buradaki sýnýflarý taramasýný saðlar.Profiles sýnýflarýný buluyor ve ekliyor.
             services.LoadMyServices();
         }
 
@@ -26,16 +28,20 @@ namespace ProgrammersBlog.Mvc
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseStatusCodePages(); //sitemizde bulunmayan bir view içerisine gittiðimiz zaman hata almamýz için yazýlýr.
             }
+            app.UseStaticFiles(); //css,image,javascript dosyalarý olabilir.
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapAreaControllerRoute(
+                    name: "Admin",
+                    areaName: "Admin",
+                    pattern: "Admin/{controller=home}/{action=Index}/{id?}"
+                    ); //sadece bir adet area olacaðý için MapAreaControllerRoute kullandýk. farklý arealar var ise->MapControllerRoute kullan.
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }

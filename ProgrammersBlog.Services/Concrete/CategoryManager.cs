@@ -40,9 +40,18 @@ namespace ProgrammersBlog.Services.Concrete
             return new Result(ResultStatus.Success, $"{categoryAddDto.Name} adlı kategori başarılı bir şekilde eklenmiştir.");
         }
 
-        public Task<IResult> Delete(int categoryId)
+        public async Task<IResult> Delete(int categoryId, string modifiedByName)
         {
-            throw new NotImplementedException();
+            var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId);
+            if (category != null)
+            {
+                category.IsDeleted = true;
+                category.ModifiedByName = modifiedByName;
+                category.ModifiedDate = DateTime.Now;
+                await _unitOfWork.Categories.UpdateAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+                return new Result(ResultStatus.Success, $"{category.Name} adlı kategori başarılı bir şekilde silindi.");
+            }
+            return new Result(ResultStatus.Error, "Kategori bulunamadı");
         }
 
         public async Task<IDataResult<Category>> Get(int categoryId)

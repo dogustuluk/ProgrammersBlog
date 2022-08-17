@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProgrammersBlog.Services.AutoMapper.Profiles;
 using ProgrammersBlog.Services.Extensions;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace ProgrammersBlog.Mvc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation(); //runtimecompilation ile frontend kýsmýnda deðiþiklikler yaptýðýmýzda uygulamayý tekrardan derlememize gerek kalmýyor.
-            services.AddAutoMapper(typeof(Startup));//derlenme esnasýnda automapper'ýn buradaki sýnýflarý taramasýný saðlar.Profiles sýnýflarýný buluyor ve ekliyor.
+            services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile));//derlenme esnasýnda automapper'ýn buradaki sýnýflarý taramasýný saðlar.Profiles sýnýflarýný buluyor ve ekliyor.
             services.LoadMyServices();
         }
 

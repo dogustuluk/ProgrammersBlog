@@ -89,7 +89,8 @@ namespace ProgrammersBlog.Services.Concrete
             var category = _mapper.Map<Category>(categoryAddDto);
             category.CreatedByName = createdByName;
             category.ModifiedByName = createdByName;
-            await _unitOfWork.Categories.AddAsync(category).ContinueWith(t => _unitOfWork.SaveAsync()); //bu işlem daha veri tabanına kaydedilmeden biz frontend kısmına dönmüş olmamız mümkün olacak. performans kazandırırken yönetimini zorlaştırıyor olacak.
+            await _unitOfWork.Categories.AddAsync(category);//saveasync'i continueWith ile yaparsak thread'lerde hata alıyor olucaz.
+            await _unitOfWork.SaveAsync();
             //await _unitOfWork.SaveAsync(); //-> yukarıda ContinueWith ile daha hızlı bir şekilde buradaki işlemi yapabiliriz. 
             return new Result(ResultStatus.Success, $"{categoryAddDto.Name} adlı kategori başarılı bir şekilde eklenmiştir.");
         }
@@ -102,7 +103,8 @@ namespace ProgrammersBlog.Services.Concrete
                 category.IsDeleted = true;
                 category.ModifiedByName = modifiedByName;
                 category.ModifiedDate = DateTime.Now;
-                await _unitOfWork.Categories.UpdateAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+                await _unitOfWork.Categories.UpdateAsync(category);
+                await _unitOfWork.SaveAsync();
                 return new Result(ResultStatus.Success, $"{category.Name} adlı kategori başarılı bir şekilde silindi.");
             }
             return new Result(ResultStatus.Error, "Kategori bulunamadı");
@@ -112,7 +114,8 @@ namespace ProgrammersBlog.Services.Concrete
             var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId);
             if (category != null)
             {
-                await _unitOfWork.Categories.DeleteAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+                await _unitOfWork.Categories.DeleteAsync(category);
+                await _unitOfWork.SaveAsync();
                 return new Result(ResultStatus.Success, $"{category.Name} adlı kategori kalıcı olarak silindi!");
             }
             return new Result(ResultStatus.Error, "Böyle bir kategori bulunamadı");
@@ -122,7 +125,8 @@ namespace ProgrammersBlog.Services.Concrete
         {
             var category = _mapper.Map<Category>(categoryUpdateDto);
             category.ModifiedByName = modifiedByName;
-            await _unitOfWork.Categories.UpdateAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+            await _unitOfWork.Categories.UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
             return new Result(ResultStatus.Success, $"{categoryUpdateDto.Name} adlı kategori başarıyla güncellenmitir.");
         }
 

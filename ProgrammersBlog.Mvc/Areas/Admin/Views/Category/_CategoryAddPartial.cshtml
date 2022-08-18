@@ -9,7 +9,7 @@
       <div class="modal-body">
           <form asp-action="Add" id="form-category-add">
               <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
-              <div asp-validation-summary="All" class="text-danger" id="validationSummary" aria-hidden="true" style="display:none;"></div>
+              <div asp-validation-summary="All" class="text-danger" id="validation-summary" aria-hidden="true" style="display:none;"></div>
               <div class="form-group">
                   <label asp-for="Name"></label>
                   <input class="form-control" asp-for="Name"/>
@@ -33,8 +33,8 @@
           </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger btn-block" data-bs-dismiss="modal"><span class="fas fa-times"></span> İptal</button>
-        <button type="button" class="btn btn-primary btn-block" id="btnSave"><span class="fas fa-save"></span> Ekle</button>
+        <button type="button" class="btn btn-danger btn-block" data-dismiss="modal"><span class="fas fa-times"></span> İptal</button>
+                <button type="button" class="btn btn-primary btn-block" id="btnSave"><span class="fas fa-save"></span> Kaydet</button>
       </div>
     </div>
   </div>

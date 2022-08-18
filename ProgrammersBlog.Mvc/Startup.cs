@@ -8,6 +8,8 @@ using ProgrammersBlog.Services.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ProgrammersBlog.Mvc
@@ -18,7 +20,11 @@ namespace ProgrammersBlog.Mvc
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews().AddRazorRuntimeCompilation(); //runtimecompilation ile frontend kýsmýnda deðiþiklikler yaptýðýmýzda uygulamayý tekrardan derlememize gerek kalmýyor.
+            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddJsonOptions(opt =>
+            {
+                opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());//enum converter
+                opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve; //nested object //json'a dönüþecek nesneler içerisinde farklý nesneler de var ise ->örn. Category gönderdiðimizde içerisinde include edilen Article'lar da var ise. Burada bug vardýr, dolayýsýyla controller'a da yazýyor olucaz.
+            }); //runtimecompilation ile frontend kýsmýnda deðiþiklikler yaptýðýmýzda uygulamayý tekrardan derlememize gerek kalmýyor.
             services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile));//derlenme esnasýnda automapper'ýn buradaki sýnýflarý taramasýný saðlar.Profiles sýnýflarýný buluyor ve ekliyor.
             services.LoadMyServices();
         }

@@ -167,12 +167,12 @@
                                 <td>${categoryAddAjaxModel.CategoryDto.Category.Id}</td>
                                 <td>${categoryAddAjaxModel.CategoryDto.Category.Name}</td>
                                 <td>${categoryAddAjaxModel.CategoryDto.Category.Description}</td>
-                                <td>${categoryAddAjaxModel.CategoryDto.Category.IsActive}</td>
-                                <td>${categoryAddAjaxModel.CategoryDto.Category.IsDeleted}</td>
+                                <td>${convertFirstLetterToUpperCase(categoryAddAjaxModel.CategoryDto.Category.IsActive.toString())}</td>
+                                <td>${convertFirstLetterToUpperCase(categoryAddAjaxModel.CategoryDto.Category.IsDeleted.toString())}</td>
                                 <td>${categoryAddAjaxModel.CategoryDto.Category.Note}</td>
-                                <td>${categoryAddAjaxModel.CategoryDto.Category.CreatedDate}</td>
+                                <td>${convertToShortDate(categoryAddAjaxModel.CategoryDto.Category.CreatedDate)}</td>
                                 <td>${categoryAddAjaxModel.CategoryDto.Category.CreatedByName}</td>
-                                <td>${categoryAddAjaxModel.CategoryDto.Category.ModifiedDate}</td>
+                                <td>${convertToShortDate(categoryAddAjaxModel.CategoryDto.Category.ModifiedDate)}</td>
                                 <td>${categoryAddAjaxModel.CategoryDto.Category.ModifiedByName}</td>
                                 
                             </tr>`; //template literals -> stringleri formatlayabilir, ve formatlı olan
@@ -185,6 +185,16 @@
                        
                        //toastr start
                        toastr.success(`${categoryAddAjaxModel.CategoryDto.Message}`, 'Başarılı İşlem!');
+                       }
+                       else{
+                           let summaryText = "";
+                           $('#validation-summary > ul > li').each(function(){
+                               //her bir li'nin text özelliğini seçiyoruz
+                               let text = $(this).text(); //$(this) ->içerisinde bulunduğumuz li'yi seçmemizi sağlar. seçilen li'nin text'ini almak istediğimiz için ->text()
+                               //her bir text'i içerisinde toplayabileceğimiz farklı bir değişkene ihtiyaç var. bu döngünün başına gelip let summaryText oluştur.
+                               summaryText = `*${text}\n`;//* -> uyarı mesajının önüne konacak olan işaret
+                           });
+                           toastr.warning(summaryText);
                        }
                     });
                 }); //div üzerinde eklediğimiz event calıştığında ya da tetiklendiğinde çalışacak işlemleri eklememizi sağlıyor

@@ -140,6 +140,10 @@
                                                 <td>${category.CreatedByName}</td>
                                                 <td>${convertToShortDate(category.ModifiedDate)}</td>
                                                 <td>${category.ModifiedByName}</td>
+                                                <td>
+                                                <button class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Düzenle</button>
+                                                <button class="btn btn-danger btn-sm btn-delete" data-id="${category.Id}"><span class="fas fa-minus-circle"></span> Sil</button>@* //btnDelete'i butonu seçmek için yazarız*@
+                                              </td>
                                              </tr>`;
                                         });  
                                         //devamında ise gelen veri ile tablodaki verinin yer değiştirmesi gerekir.
@@ -155,7 +159,9 @@
                                 },
                                 error:function(err){
                                     console.log(err);
-                                    toastr.error(`${err.statusText}`, 'İşlem Başarısız!');
+                                    $('.spinner-border').hide();
+                                    $('#categoriesTable').fadeIn(1000);
+                                    toastr.error(`${err.responseText}`, 'Hata!');
 
                                 }
                             });

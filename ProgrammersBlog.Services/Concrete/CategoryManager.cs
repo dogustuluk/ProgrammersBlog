@@ -160,6 +160,19 @@ namespace ProgrammersBlog.Services.Concrete
             });
         }
 
-       
+        public async Task<IDataResult<CategoryUpdateDto>> GetCategoryUpdateDto(int categoryId)
+        {
+            var result = await _unitOfWork.Categories.AnyAsync(c => c.Id == categoryId);
+            if (result)
+            {
+                var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId); //category'i artık CategoryUpdateDto'ya map etmemiz gerekiyor.AutoMapper Profile'a ekle. ->            CreateMap<Category, CategoryUpdateDto>();
+                var categoryUpdateDto = _mapper.Map<CategoryUpdateDto>(category);
+                return new DataResult<CategoryUpdateDto>(ResultStatus.Success, categoryUpdateDto);
+            }
+            else
+            {
+                return new DataResult<CategoryUpdateDto>(ResultStatus.Error, "Böyle bir kategori bulunamadı", null);
+            }
+        }
     }
 }

@@ -55,6 +55,22 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             });
             return Json(categoryAddAjaxErrorModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int categoryId)
+        {
+
+            // return PartialView("_CategoryUpdatePartial", categoryUpdateDto); //form geldiğinde update edilecek entity'nin bilgilerini form içerisinde göstermek için -> categoryUpdateDto yazılmalı.
+            var result = await _categoryService.GetCategoryUpdateDto(categoryId);
+            if (result.ResultStatus == ResultStatus.Success)
+            {
+                return PartialView("_CategoryUpdatePartial",result.Data);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
         public async Task<JsonResult> GetAllCategories()
         {
             var result = await _categoryService.GetAllByNonDeleted();

@@ -64,5 +64,12 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             });
             return Json(categories);
         }
+        [HttpPost]
+        public async Task<JsonResult> Delete(int categoryId) //category index'teki data-id=@category.Id kısmından alıyor olucaz buradaki categoryId'yi
+        {
+            var result = await _categoryService.Delete(categoryId, "Doğuş Tuluk");
+            var ajaxResult = JsonSerializer.Serialize(result);
+            return Json(ajaxResult);
+        }
     }
 }

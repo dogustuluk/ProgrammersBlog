@@ -30,6 +30,7 @@
                             <th>Oluşturan Kullanıcı</th>
                             <th>Son Düzenlenme Tarihi</th>
                             <th>Son Düzenleyen Kullanıcı</th>
+                            <th>İşlemler</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -44,12 +45,15 @@
                             <th>Oluşturan Kullanıcı</th>
                             <th>Son Düzenlenme Tarihi</th>
                             <th>Son Düzenleyen Kullanıcı</th>
+                            <th>İşlemler</th>
                         </tr>
                     </tfoot>
                     <tbody>
                         @foreach(var category in Model.Categories)
                         {
-                            <tr>
+                            <tr name="@category.Id"> @*name etiketini ekleme nedenimiz -> sil butonuna bastığımızda sayfayı yenilemeden
+                                silmiş olduğumuz kategori ile ilgili satırın da yok olmasını sağlamak için, ilgili kategorinin satırının
+                                yakalanması için yazarız.*@
                                 <td>@category.Id</td>
                                 <td>@category.Name</td>
                                 <td>@category.Description</td>
@@ -60,6 +64,10 @@
                                 <td>@category.CreatedByName</td>
                                 <td>@category.ModifiedDate</td>
                                 <td>@category.ModifiedByName</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm"><span class="fas fa-edit"></span> Düzenle</button>
+                                    <button class="btn btn-danger btn-sm btn-Delete" data-id="@category.Id"><span class="fas fa-minus-circle"></span> Sil</button> //btnDelete'i butonu seçmek için yazarız
+                                </td>
                             </tr>
                             
                         }
@@ -147,7 +155,7 @@
                                 },
                                 error:function(err){
                                     console.log(err);
-                                    toastr.error(`${err}`, 'İşlem Başarısız!');
+                                    toastr.error(`${err.statusText}`, 'İşlem Başarısız!');
 
                                 }
                             });

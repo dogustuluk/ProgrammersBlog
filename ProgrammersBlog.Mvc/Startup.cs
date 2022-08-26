@@ -25,6 +25,7 @@ namespace ProgrammersBlog.Mvc
                 opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());//enum converter
                 opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve; //nested object //json'a dönüþecek nesneler içerisinde farklý nesneler de var ise ->örn. Category gönderdiðimizde içerisinde include edilen Article'lar da var ise. Burada bug vardýr, dolayýsýyla controller'a da yazýyor olucaz.
             }); //runtimecompilation ile frontend kýsmýnda deðiþiklikler yaptýðýmýzda uygulamayý tekrardan derlememize gerek kalmýyor.
+            services.AddSession();
             services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile));//derlenme esnasýnda automapper'ýn buradaki sýnýflarý taramasýný saðlar.Profiles sýnýflarýný buluyor ve ekliyor.
             services.LoadMyServices();
         }
@@ -37,9 +38,14 @@ namespace ProgrammersBlog.Mvc
                 app.UseDeveloperExceptionPage();
                 app.UseStatusCodePages(); //sitemizde bulunmayan bir view içerisine gittiðimiz zaman hata almamýz için yazýlýr.
             }
+            app.UseSession();
             app.UseStaticFiles(); //css,image,javascript dosyalarý olabilir.
 
             app.UseRouting();
+
+            app.UseAuthentication();//kimlik doðrulamasý
+
+            app.UseAuthorization();//yetki kontrolü
 
             app.UseEndpoints(endpoints =>
             {

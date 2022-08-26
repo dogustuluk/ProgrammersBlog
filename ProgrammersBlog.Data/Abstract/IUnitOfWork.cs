@@ -13,8 +13,6 @@ namespace ProgrammersBlog.Data.Abstract
         IArticleRepository Articles { get; } //unitofwork.Articles diyerek makalelere erişebiliyor olucaz.
         ICategoryRepository Categories { get; }
         ICommentRepository Comments { get; }
-        IRoleRepository Roles { get; }
-        IUserRepository Users { get; } //_unitOfWork.Categories.AddAsync(); -> kullanım örneği.
         Task<int> SaveAsync(); //int olarak veriyoruz çünkü etkilenen kayıt sayısını almak isteyebiliriz.
         /*örnek ->
         _unitOfWork.Categories.AddAsync(user);

@@ -168,7 +168,7 @@
             }); //div üzerinde eklediğimiz event calıştığında ya da tetiklendiğinde çalışacak işlemleri eklememizi sağlıyor
     });
     //Ajax Post / Posting the FormData as UserAddDto ends here
-    //Ajax Post / Deleting a Category starts from here
+    //Ajax Post / Deleting a User starts from here
     //silme işlemini yapabilmek için öncelikle sil butonuna tıklanma olayını yakalamamız gerekir.
     $(document).on('click',
         '.btn-delete',
@@ -178,11 +178,11 @@
             //data-id sil butonundaki (et)category.id gelir
             ///tıklanan butonu yakalama
             const tableRow = $(`[name = "${id}"]`);
-            const categoryName = tableRow.find('td:eq(1)').text(); //<td>${categoryAddAjaxModel.CategoryDto.Category.Name}</td> alanını almış olduk.
+            const userName = tableRow.find('td:eq(1)').text(); //<td>${categoryAddAjaxModel.CategoryDto.Category.Name}</td> alanını almış olduk.
 
             Swal.fire({
                 title: 'Silmek istediğinize emin misiniz?',
-                text: `${categoryName} adlı kategori silinecektir!`,
+                text: `${userName} adlı kullanıcı silinecektir!`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -197,28 +197,28 @@
                     $.ajax({
                         type: 'POST',
                         dataType: 'json',
-                        data: { categoryId: id }, //categoryService'teki parametreyi veriyoruz(categoryId).
-                        url: '/Admin/Category/Delete/',
+                        data: { userId: id }, //categoryService'teki parametreyi veriyoruz(categoryId).
+                        url: '/Admin/User/Delete/',
                         success: function (data) {
                             //IResult geliyor, bunu öncelikle json'a parse et.
-                            const categoryDto = jQuery.parseJSON(data);
+                            const userDto = jQuery.parseJSON(data);
                             //ResultStatus tarafını kontrol et.
-                            if (categoryDto.ResultStatus === 0) {
+                            if (userDto.ResultStatus === 0) {
                                 Swal.fire
                                     (
                                         'Silindi!',
-                                        `${categoryDto.Category.Name} adlı kategori başarıyla silinmiştir.`,
+                                        `${userDto.User.UserName} adlı kullanıcı başarıyla silinmiştir.`,
                                         'success'
                                     );
                                 //sil butonuna basıldığında ilgili satırın gizlenmesini sağlamak için
 
-                                tableRow.fadeOut(1500);
+                                dataTable.row(tableRow).remove().draw();
                             }
                             else {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Başarısız İşlem!',
-                                    text: `${categoryDto.Message}`,
+                                    text: `${userDto.Message}`,
                                 });
                             }
                         },

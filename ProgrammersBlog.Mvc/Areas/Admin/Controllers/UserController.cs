@@ -155,5 +155,19 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             return fileName; //DoğuşTuluk_587_5_38_12_3_10_2020.png - "~/img/user.Picture"
 
         }
+        public bool ImageDelete(string pictureName)
+        {
+            string wwwroot = _env.WebRootPath;
+            var fileToDelete = Path.Combine($"{wwwroot}/img", pictureName);//resmin bulunduğu konum,dosya yolu.
+            if (System.IO.File.Exists(fileToDelete))//ilgili path'in olup olmadığının kontrolü
+            {
+                System.IO.File.Delete(fileToDelete);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

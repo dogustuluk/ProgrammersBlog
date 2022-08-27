@@ -43,13 +43,13 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             //"~/img/user.Picture"
             string wwwroot = _env.WebRootPath; //wwwroot'un dosya yolunu dinamik olarak verir.
             //string fileName2 = Path.GetFileNameWithoutExtension(userAddDto.Picture.FileName);//sonundaki uzantı olmadan almamızı sağlar. ->dogustuluk
-            string fileExtension = Path.GetExtension(userAddDto.Picture.FileName); //dosyanın uzantısını almamızı sağlar -> .png / .jpeg
+            string fileExtension = Path.GetExtension(userAddDto.PictureFile.FileName); //dosyanın uzantısını almamızı sağlar -> .png / .jpeg
             DateTime dateTime = DateTime.Now;
             string fileName = $"{userAddDto.UserName}_{dateTime.FullDateAndTimeStringWithUnderscore()}{fileExtension}"; // ---->DoğuşTuluk_587_5_38_12_3_10_2020.png
             var path = Path.Combine($"{wwwroot}/img",fileName);
             await using(var stream = new FileStream(path, FileMode.Create))
             {
-                await userAddDto.Picture.CopyToAsync(stream);
+                await userAddDto.PictureFile.CopyToAsync(stream);
             }
             return fileName; //DoğuşTuluk_587_5_38_12_3_10_2020.png - "~/img/user.Picture"
 

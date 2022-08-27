@@ -65,7 +65,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 //map işleminden önce userAddDto'nun içerisindeki boş olan picture alanına upload metodunu kullanarak bir tane string ımagename eklemek gerekiyor.
-                userAddDto.Picture = await ImageUpload(userAddDto); //resim adı eklendi
+                userAddDto.Picture = await ImageUpload(userAddDto.UserName, userAddDto.PictureFile); //resim adı eklendi
                 //automapper
                 var user = _mapper.Map<User>(userAddDto);
                 var result = await _userManager.CreateAsync(user, userAddDto.Password);

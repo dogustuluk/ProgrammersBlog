@@ -111,9 +111,9 @@
         }
     });
     //@* DataTables ends here *@
-    //        @* Ajax Get / Getting the _CategoryAddPartial as Modal Form starts from here. *@
+    //        @* Ajax Get / Getting the _UserAddPartial as Modal Form starts from here. *@
     $(function () {
-        const url = '/Admin/Category/Add/';
+        const url = '/Admin/User/Add/';
         const placeHolderDiv = $('#modalPlaceHolder');
         $('#btnAdd').click(function () {
             $.get(url).done(function (data) {

@@ -37,7 +37,7 @@
                             if (userListDto.ResultStatus === 0) { //üç eşittir hem değerin aynı olup olmadığını hem de değerin
                                 //tipini kontrol eder. burada hem int hem de 0 olmasını istiyoruz. 0 ise başarılı
                                 $.each(userListDto.Users.$values, function (index, user) {
-                                    dataTable.row.add([
+                                const newTableRow = dataTable.row.add([
                                         user.Id,
                                         user.UserName,
                                         user.Email,
@@ -47,7 +47,9 @@
                                     <button class="btn btn-primary btn-sm btn-update" data-id="${user.Id}"><span class="fas fa-edit"></span></button>
                                     <button class="btn btn-danger btn-sm btn-delete" data-id="${user.Id}"><span class="fas fa-minus-circle"></span> </button>
                                 `
-                                    ]);
+                                ]).node();
+                                    const jqueryTableRow = $(newTableRow);
+                                    jqueryTableRow.attr('name', `${user.Id}`);
                                 });
                                 //devamında ise gelen veri ile tablodaki verinin yer değiştirmesi gerekir.
                                 dataTable.draw();
@@ -113,7 +115,7 @@
                 placeHolderDiv.find(".modal").modal('show');
             });
         });
-        //@* Ajax Get / Getting the _CategoryAddPartial as Modal Form end here. *@
+        //@* Ajax Get / Getting the _UserAddPartial as Modal Form end here. *@
         //        @* Ajax Post / Posting the FormData as UserAddDto starts from here *@
         placeHolderDiv.on('click', '#btnSave',
             function (event) {
@@ -136,7 +138,7 @@
                         const isValid = newFormBody.find('[name="IsValid"]').val() === 'True';
                         if (isValid) {
                             placeHolderDiv.find('.modal').modal('hide');
-                            dataTable.row.add([
+                            const newTableRow = dataTable.row.add([
                                 userAddAjaxModel.UserDto.User.Id,
                                 userAddAjaxModel.UserDto.User.UserName,
                                 userAddAjaxModel.UserDto.User.Email,
@@ -146,7 +148,10 @@
                                     <button class="btn btn-primary btn-sm btn-update" data-id="${userAddAjaxModel.UserDto.User.Id}"><span class="fas fa-edit"></span></button>
                                     <button class="btn btn-danger btn-sm btn-delete" data-id="${userAddAjaxModel.UserDto.User.Id}"><span class="fas fa-minus-circle"></span> </button>
                                 `
-                            ]).draw();
+                            ]).node();
+                            const jqueryTableRow = $(newTableRow);
+                            jqueryTableRow.attr('name', `${userAddAjaxModel.UserDto.User.Id}`);
+                            dataTable.row(newTableRow).draw();
                             //toastr start
                             toastr.success(`${userAddAjaxModel.UserDto.Message}`, 'Başarılı İşlem!');
                         }

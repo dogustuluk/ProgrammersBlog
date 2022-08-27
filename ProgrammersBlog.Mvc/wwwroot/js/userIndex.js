@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $('#usersTable').DataTable({
+    const dataTable = $('#usersTable').DataTable({
         dom:
             "<'row'<'col-sm-3'l><'col-sm-6 text-center'B><'col-sm-3'f>>" +
             "<'row'<'col-sm-12'tr>>" +
@@ -122,63 +122,60 @@
             });
         });
         //@* Ajax Get / Getting the _CategoryAddPartial as Modal Form end here. *@
-        //        @* Ajax Post / Posting the FormData as CategoryAddDto starts from here *@
+        //        @* Ajax Post / Posting the FormData as UserAddDto starts from here *@
         placeHolderDiv.on('click', '#btnSave',
             function (event) {
                 event.preventDefault();//butonun kendi click işlemini engeller
-                const form = $('#form-category-add');//form seçme
+                const form = $('#form-user-add');//form seçme
                 const actionUrl = form.attr('action');//form'daki asp-action ifadesine karşılık gelir
-                const dataToSend = form.serialize(); //formdaki veriyi CategoryAddDto yapıyoruz.
-                $.post(actionUrl, dataToSend).done(function (data) {
-                    console.log(data);
-                    const categoryAddAjaxModel = jQuery.parseJSON(data);//'data' parse. CategoryAddAjaxModel oldu.
-                    console.log(categoryAddAjaxModel);
-                    const newFormBody = $('.modal-body', categoryAddAjaxModel.CategoryAddPartial);
-                    placeHolderDiv.find('.modal-body').replaceWith(newFormBody);
-                    const isValid = newFormBody.find('[name="IsValid"]').val() === 'True';
-                    if (isValid) {
-                        placeHolderDiv.find('.modal').modal('hide');
-                        const newTableRow = `
-                            <tr name="${categoryAddAjaxModel.CategoryDto.Category.Id}">
-                                <td>${categoryAddAjaxModel.CategoryDto.Category.Id}</td>
-                                <td>${categoryAddAjaxModel.CategoryDto.Category.Name}</td>
-                                <td>${categoryAddAjaxModel.CategoryDto.Category.Description}</td>
-                                <td>${convertFirstLetterToUpperCase(categoryAddAjaxModel.CategoryDto.Category.IsActive.toString())}</td>
-                                <td>${convertFirstLetterToUpperCase(categoryAddAjaxModel.CategoryDto.Category.IsDeleted.toString())}</td>
-                                <td>${categoryAddAjaxModel.CategoryDto.Category.Note}</td>
-                                <td>${convertToShortDate(categoryAddAjaxModel.CategoryDto.Category.CreatedDate)}</td>
-                                <td>${categoryAddAjaxModel.CategoryDto.Category.CreatedByName}</td>
-                                <td>${convertToShortDate(categoryAddAjaxModel.CategoryDto.Category.ModifiedDate)}</td>
-                                <td>${categoryAddAjaxModel.CategoryDto.Category.ModifiedByName}</td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm btn-update" data-id="${categoryAddAjaxModel.CategoryDto.Category.Id}><span class="fas fa-edit"></span></button>
-                                    <button class="btn btn-danger btn-sm btn-delete" data-id="${categoryAddAjaxModel.CategoryDto.Category.Id}"><span class="fas fa-minus-circle"></span> </button>
-                                </td>
-                            </tr>`; //template literals -> stringleri formatlayabilir, ve formatlı olan
-                        //stringlerde değişkenlerimizin değerlerini kullanabiliriz.
-
-                        const newTableRowObject = $(newTableRow); //js // jQuery objects
-                        newTableRowObject.hide();
-                        $('#categoriesTable').append(newTableRowObject);//tabloya yeni satırları ekler
-                        newTableRowObject.fadeIn(2500)//ekrana yavaştan görünür bir halde gelmesini sağlar
-
-                        //toastr start
-                        toastr.success(`${categoryAddAjaxModel.CategoryDto.Message}`, 'Başarılı İşlem!');
-                    }
-                    else {
-                        let summaryText = "";
-                        $('#validation-summary > ul > li').each(function () {
-                            //her bir li'nin text özelliğini seçiyoruz
-                            let text = $(this).text(); //$(this) ->içerisinde bulunduğumuz li'yi seçmemizi sağlar. seçilen li'nin text'ini almak istediğimiz için ->text()
-                            //her bir text'i içerisinde toplayabileceğimiz farklı bir değişkene ihtiyaç var. bu döngünün başına gelip let summaryText oluştur.
-                            summaryText = `*${text}\n`;//* -> uyarı mesajının önüne konacak olan işaret
-                        });
-                        toastr.warning(summaryText);
+                const dataToSend = new FormData(form.get(0));
+                $.ajax({
+                    url:actionUrl,
+                    type: 'POST',
+                    data: dataToSend,
+                    processData: false,
+                    contentType:false,
+                    success: function (data) {
+                        console.log(data);
+                        const userAddAjaxModel = jQuery.parseJSON(data);//'data' parse. CategoryAddAjaxModel oldu.
+                        console.log(userAddAjaxModel);
+                        const newFormBody = $('.modal-body', userAddAjaxModel.UserAddPartial);
+                        placeHolderDiv.find('.modal-body').replaceWith(newFormBody);
+                        const isValid = newFormBody.find('[name="IsValid"]').val() === 'True';
+                        if (isValid) {
+                            placeHolderDiv.find('.modal').modal('hide');
+                            dataTable.row.add([
+                                userAddAjaxModel.UserDto.User.Id,
+                                userAddAjaxModel.UserDto.User.UserName,
+                                userAddAjaxModel.UserDto.User.Email,
+                                userAddAjaxModel.UserDto.User.PhoneNumber,
+                                `<img src="/img/${userAddAjaxModel.UserDto.User.Picture}" alt="${userAddAjaxModel.UserDto.User.UserName}" style="max-height:50px; max-width:50px;">`,
+                                `<td>
+                                    <button class="btn btn-primary btn-sm btn-update" data-id="userAddAjaxModel.UserDto.User.Id"><span class="fas fa-edit"></span></button>
+                                    <button class="btn btn-danger btn-sm btn-delete" data-id="userAddAjaxModel.UserDto.User.Id"><span class="fas fa-minus-circle"></span> </button>
+                                </td>`
+                            ]).draw();
+                            //toastr start
+                            toastr.success(`${userAddAjaxModel.UserDto.Message}`, 'Başarılı İşlem!');
+                        }
+                        else {
+                            let summaryText = "";
+                            $('#validation-summary > ul > li').each(function () {
+                                //her bir li'nin text özelliğini seçiyoruz
+                                let text = $(this).text(); //$(this) ->içerisinde bulunduğumuz li'yi seçmemizi sağlar. seçilen li'nin text'ini almak istediğimiz için ->text()
+                                //her bir text'i içerisinde toplayabileceğimiz farklı bir değişkene ihtiyaç var. bu döngünün başına gelip let summaryText oluştur.
+                                summaryText = `*${text}\n`;//* -> uyarı mesajının önüne konacak olan işaret
+                            });
+                            toastr.warning(summaryText);
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
                     }
                 });
             }); //div üzerinde eklediğimiz event calıştığında ya da tetiklendiğinde çalışacak işlemleri eklememizi sağlıyor
     });
-    //Ajax Post / Posting the FormData as CategoryAddDto ends here
+    //Ajax Post / Posting the FormData as UserAddDto ends here
     //Ajax Post / Deleting a Category starts from here
     //silme işlemini yapabilmek için öncelikle sil butonuna tıklanma olayını yakalamamız gerekir.
     $(document).on('click',

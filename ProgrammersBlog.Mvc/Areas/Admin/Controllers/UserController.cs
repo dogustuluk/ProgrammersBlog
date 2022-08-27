@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProgrammersBlog.Entities.Concrete;
 using ProgrammersBlog.Entities.Dtos;
+using ProgrammersBlog.Shared.Utilities.Extensions;
 using ProgrammersBlog.Shared.Utilities.Results.ComplexTypes;
+using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
@@ -12,10 +16,12 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
     public class UserController : Controller
     {
         private readonly UserManager<User> _userManager;
+        private readonly IWebHostEnvironment _env;
 
-        public UserController(UserManager<User> userManager)
+        public UserController(UserManager<User> userManager, IWebHostEnvironment env)
         {
             _userManager = userManager;
+            _env = env;
         }
 
         public async Task<IActionResult> Index()
@@ -31,6 +37,22 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
         public IActionResult Add()
         {
             return PartialView("_UserAddPartial");
+        }
+        public async Task<string> ImageUpload(UserAddDto userAddDto)
+        {
+            //"~/img/user.Picture"
+            string wwwroot = _env.WebRootPath; //wwwroot'un dosya yolunu dinamik olarak verir.
+            //string fileName2 = Path.GetFileNameWithoutExtension(userAddDto.Picture.FileName);//sonundaki uzantı olmadan almamızı sağlar. ->dogustuluk
+            string fileExtension = Path.GetExtension(userAddDto.Picture.FileName); //dosyanın uzantısını almamızı sağlar -> .png / .jpeg
+            DateTime dateTime = DateTime.Now;
+            string fileName = $"{userAddDto.UserName}_{dateTime.FullDateAndTimeStringWithUnderscore()}{fileExtension}"; // ---->DoğuşTuluk_587_5_38_12_3_10_2020.png
+            var path = Path.Combine($"{wwwroot}/img",fileName);
+            await using(var stream = new FileStream(path, FileMode.Create))
+            {
+                await userAddDto.Picture.CopyToAsync(stream);
+            }
+            return fileName; //DoğuşTuluk_587_5_38_12_3_10_2020.png - "~/img/user.Picture"
+
         }
     }
 }

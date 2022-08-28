@@ -277,5 +277,10 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                 return false;
             }
         }
+        [HttpGet]
+        public ViewResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

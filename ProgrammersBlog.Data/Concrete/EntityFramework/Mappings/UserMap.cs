@@ -61,7 +61,7 @@ namespace ProgrammersBlog.Data.Concrete.EntityFramework.Mappings
                 Picture = "defaultUser.png",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
-                SecurityStamp = new Guid().ToString(), //"D" yaparsak "-" ile yazar
+                SecurityStamp = Guid.NewGuid().ToString(), //"D" yaparsak "-" ile yazar
 
             };
             adminUser.PasswordHash = CreatePasswordHash(adminUser, "adminuser");
@@ -77,7 +77,7 @@ namespace ProgrammersBlog.Data.Concrete.EntityFramework.Mappings
                 Picture = "defaultUser.png",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
-                SecurityStamp = new Guid().ToString(), //"D" yaparsak "-" ile yazar
+                SecurityStamp = Guid.NewGuid().ToString(), //"D" yaparsak "-" ile yazar
 
             };
             editorUser.PasswordHash = CreatePasswordHash(editorUser, "editoruser");

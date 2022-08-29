@@ -29,7 +29,7 @@ namespace ProgrammersBlog.Entities.Dtos
         [MaxLength(30, ErrorMessage = "{0} {1} karakterden büyük olamaz!")]
         [MinLength(5, ErrorMessage = "{0} {1} karakterden küçük olamaz!")]
         [DataType(DataType.Password)]
-        [Compare("NewPassword",ErrorMessage = "Yeni şifreniz ile yeni şifrenizin tekrarı birbiriyle uyuşmuyor",)]
+        [Compare("NewPassword",ErrorMessage = "Yeni şifreniz ile yeni şifrenizin tekrarı birbiriyle uyuşmuyor")]
         public string RepeatPassword { get; set; }
     }
 }

@@ -25,6 +25,29 @@ namespace ProgrammersBlog.Mvc.Helpers.Concrete
              _wwwroot = _env.WebRootPath; //wwwroot'un dosya yolunu dinamik olarak verir.
         }
 
+        public IDataResult<ImageDeletedDto> Delete(string pictureName)
+        {
+            var fileToDelete = Path.Combine($"{_wwwroot}/{imgFolder}/", pictureName);//resmin bulunduğu konum,dosya yolu.
+            if (System.IO.File.Exists(fileToDelete))//ilgili path'in olup olmadığının kontrolü
+            {
+                //path'te bulunan dosyanın bilgilerine ulaşmak için FileInfo kullanılır
+                var fileInfo = new FileInfo(fileToDelete);
+                var imageDeletedDto = new ImageDeletedDto
+                {
+                    FullName = pictureName,
+                    Extensions = fileInfo.Extension,
+                    Path = fileInfo.FullName,
+                    Size = fileInfo.Length
+                };
+                System.IO.File.Delete(fileToDelete);
+                return new DataResult<ImageDeletedDto>(ResultStatus.Success, imageDeletedDto);
+            }
+            else
+            {
+                return new DataResult<ImageDeletedDto>(ResultStatus.Error, "Böyle bir resim bulunamadı!", null);
+            }
+        }
+
         public async Task<IDataResult<UploadedImageDto>> UploadeUserImage(string userName, IFormFile pictureFile, string folderName="userImages")
         {
             if (!Directory.Exists($"{_wwwroot}/{imgFolder}/{folderName}"))//ilgili klasör var mı?

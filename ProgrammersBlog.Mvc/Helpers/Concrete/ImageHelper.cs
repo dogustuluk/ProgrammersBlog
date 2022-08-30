@@ -48,7 +48,7 @@ namespace ProgrammersBlog.Mvc.Helpers.Concrete
             }
         }
 
-        public async Task<IDataResult<UploadedImageDto>> UploadeUserImage(string userName, IFormFile pictureFile, string folderName="userImages")
+        public async Task<IDataResult<ImageUploadedDto>> UploadeUserImage(string userName, IFormFile pictureFile, string folderName="userImages")
         {
             if (!Directory.Exists($"{_wwwroot}/{imgFolder}/{folderName}"))//ilgili klasör var mı?
             {
@@ -63,7 +63,7 @@ namespace ProgrammersBlog.Mvc.Helpers.Concrete
             {
                 await pictureFile.CopyToAsync(stream);
             }
-            return new DataResult<UploadedImageDto>(ResultStatus.Error,$"{userName} adlı kullanıcının resmi başarıyla yüklenmiştir.",new UploadedImageDto
+            return new DataResult<ImageUploadedDto>(ResultStatus.Success,$"{userName} adlı kullanıcının resmi başarıyla yüklenmiştir.",new ImageUploadedDto
             {
                 FullName = $"{folderName}/{newFileName}",
                 OldName = oldFileName,

@@ -214,7 +214,10 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                         : "userImages/defaultUser.png"; //başarılı değilse default.png atanır.
                                                         //ImageDelete(oldUserPicture); //eğer bu şekilde yaparsak, yeni resim yüklendiği sırada bir hata ile karşılaşılırsa işlem başarısız olur ve kullanıcının da halihazorda kullandığı resmi de silmiş oluruz. dolayısıyla bu işlemi burada yapmamamız gerekir. işlem başarılı olursa bunu yapmalıyız.
 
-                    isNewPictureUploaded = true;
+                    if (oldUserPicture != "userImages/defaultUser.png")
+                    {
+                        isNewPictureUploaded = true;
+                    }
                 }
                 var updatedUser = _mapper.Map<UserUpdateDto, User>(userUpdateDto, oldUser);
                 var result = await _userManager.UpdateAsync(updatedUser);
@@ -222,7 +225,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                 {
                     if (isNewPictureUploaded)
                     {
-                        ImageDelete(oldUserPicture);
+                        _imageHelper.Delete(oldUserPicture);
                     }
                     var userUpdateViewModel = JsonSerializer.Serialize(new UserUpdateAjaxViewModel
                     {
@@ -283,7 +286,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                     userUpdateDto.Picture = uploadedImageDtoResult.ResultStatus == ResultStatus.Success
                         ? uploadedImageDtoResult.Data.FullName //başarılıysa seçili resim atanır.
                         : "userImages/defaultUser.png"; //başarılı değilse default.png atanır.
-                    if (oldUserPicture != "defaultUser.png")
+                    if (oldUserPicture != "userImages/defaultUser.png")
                     {
                         isNewPictureUploaded = true;
                     }
@@ -294,7 +297,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                 {
                     if (isNewPictureUploaded)
                     {
-                        ImageDelete(oldUserPicture);
+                        _imageHelper.Delete(oldUserPicture);
                     }
                     TempData.Add("SuccessMessage", $"{updatedUser.UserName} adlı kullanıcı başarıyla güncellenmiştir.");
                     return View(userUpdateDto);
@@ -357,22 +360,6 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             {
                 return View(userPasswordChangeDto);
             }
-        }
-        [Authorize(Roles = "Admin,Editor")]
-        public bool ImageDelete(string pictureName)
-        {
-            //string wwwroot = _env.WebRootPath;
-            //var fileToDelete = Path.Combine($"{wwwroot}/img", pictureName);//resmin bulunduğu konum,dosya yolu.
-            //if (System.IO.File.Exists(fileToDelete))//ilgili path'in olup olmadığının kontrolü
-            //{
-            //    System.IO.File.Delete(fileToDelete);
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
-            return true;
         }
         [HttpGet]
         public ViewResult AccessDenied()

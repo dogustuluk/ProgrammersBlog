@@ -168,6 +168,7 @@
                     },
                     error: function (err) {
                         console.log(err);
+                        toastr.error(`${err.responseText}`, 'Hata!');
                     }
                 });
             }); //div üzerinde eklediğimiz event calıştığında ya da tetiklendiğinde çalışacak işlemleri eklememizi sağlıyor
@@ -247,7 +248,7 @@
                 placeHolderDiv.html(data);
                 placeHolderDiv.find('.modal').modal('show');
             }).fail(function () {
-                toastr.error("Bir hata oluştu");
+                toastr.error(`${err.responseText}`, 'Hata!');
             });
         });
 
@@ -304,6 +305,7 @@
                     },
                     error: function (err) {
                         console.log(err)
+                        toastr.error(`${err.responseText}`, 'Hata!');
                     }
                
                 });

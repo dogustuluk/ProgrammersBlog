@@ -30,6 +30,8 @@
                     "1": "1 kayıt seçildi"
                 }
             }
-        }
+        },
+        //tarihe göre sıralama yapmak için
+        "order":[[4,"desc"]]
     });
 })

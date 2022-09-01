@@ -66,6 +66,8 @@
             showMonthAfterYear: false,
             yearSuffix: "",
             duration: 500,//datepicker açılma süresi
+            showAnim: "drop",
+            showOptions: {direction:"left"},
             minDate: -3, //şuanki tarihten bir gün öncesine kadar seçim yapabilir
             maxDate:+3
         

@@ -43,6 +43,34 @@
         placeholder: "Lütfen bir kategori seçiniz",
         allowClear: true
     });
-    
+    //Trumbowyg end
+
+    //jQuery UI DatePicker
+    $(function () {
+        $("#datepicker").datepicker({
+            closeText: "kapat",
+            prevText: "geri",
+            nextText: "ileri",
+            currentText: "bugün",
+            monthNames: ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+                "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"],
+            monthNamesShort: ["Oca", "Şub", "Mar", "Nis", "May", "Haz",
+                "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+            dayNames: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
+            dayNamesShort: ["Pz", "Pt", "Sa", "Ça", "Pe", "Cu", "Ct"],
+            dayNamesMin: ["Pz", "Pt", "Sa", "Ça", "Pe", "Cu", "Ct"],
+            weekHeader: "Hf",
+            dateFormat: "dd.mm.yy",
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: "",
+            duration: 500,//datepicker açılma süresi
+            minDate: -3, //şuanki tarihten bir gün öncesine kadar seçim yapabilir
+            maxDate:+3
+        
+        });
+    });
+    //jQuery UI DatePicker
 
 });

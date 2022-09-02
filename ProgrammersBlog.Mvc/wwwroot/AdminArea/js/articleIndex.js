@@ -119,11 +119,11 @@
             //data-id sil butonundaki (et)category.id gelir
             ///tıklanan butonu yakalama
             const tableRow = $(`[name = "${id}"]`);
-            const userName = tableRow.find('td:eq(1)').text(); //<td>${categoryAddAjaxModel.CategoryDto.Category.Name}</td> alanını almış olduk.
+            const articleTitle = tableRow.find('td:eq(2)').text();
 
             Swal.fire({
                 title: 'Silmek istediğinize emin misiniz?',
-                text: `${userName} adlı kullanıcı silinecektir!`,
+                text: `${articleTitle} başlıklı makale silinecektir!`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -138,17 +138,17 @@
                     $.ajax({
                         type: 'POST',
                         dataType: 'json',
-                        data: { userId: id }, //categoryService'teki parametreyi veriyoruz(categoryId).
-                        url: '/Admin/User/Delete/',
+                        data: { articleId: id }, //categoryService'teki parametreyi veriyoruz(categoryId).
+                        url: '/Admin/Article/Delete/',
                         success: function (data) {
                             //IResult geliyor, bunu öncelikle json'a parse et.
-                            const userDto = jQuery.parseJSON(data);
+                            const articleResult = jQuery.parseJSON(data);
                             //ResultStatus tarafını kontrol et.
-                            if (userDto.ResultStatus === 0) {
+                            if (articleResult.ResultStatus === 0) {
                                 Swal.fire
                                     (
                                         'Silindi!',
-                                        `${userDto.User.UserName} adlı kullanıcı başarıyla silinmiştir.`,
+                                        `${articleResult.Message}`,
                                         'success'
                                     );
                                 //sil butonuna basıldığında ilgili satırın gizlenmesini sağlamak için
@@ -159,7 +159,7 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Başarısız İşlem!',
-                                    text: `${userDto.Message}`,
+                                    text: `${articleResult.Message}`,
                                 });
                             }
                         },

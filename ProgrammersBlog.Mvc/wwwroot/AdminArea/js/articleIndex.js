@@ -39,12 +39,23 @@
                             //ResultStatus durumunu kontrol etmeliyiz.
                             if (articleResult.Data.ResultStatus === 0) { //üç eşittir hem değerin aynı olup olmadığını hem de değerin
                                 //tipini kontrol eder. burada hem int hem de 0 olmasını istiyoruz. 0 ise başarılı
+                                let categoriesArray = [];//aynı kategori olunca hata vermesinin çözümü - başlangıç
                                 $.each(articleResult.Data.Articles.$values, function (index, article) {
                                     const newArticle = getJsonNetObject(article, articleResult.Data.Articles.$values);
+                                    let newCategory = getJsonNetObject(newArticle.Category, newArticle);//aynı kategori olunca hata vermesinin çözümü
+                                    if (newCategory != null) {
+                                        categoriesArray.push(newCategory);
+                                    }
+                                    if (newCategory === null) {
+                                        newCategory = categoriesArray.find((category) => {
+                                            return category.$id== newArticle.Category.$ref;
+                                        })
+                                    }
+                                    console.log(newCategory);
                                     console.log(newArticle);
                                     const newTableRow = dataTable.row.add([
                                         newArticle.Id,
-                                        newArticle.Category.Name,
+                                        newCategory.Name, //aynı kategori olunca hata vermesinin çözümü - son
                                         newArticle.Title,
                                         `<img src="/img/${newArticle.Thumbnail}" alt="${newArticle.Title}" class="my-image-table" />`,
                                         `${convertToShortDate(newArticle.Date)}`,

@@ -12,6 +12,7 @@ namespace ProgrammersBlog.Services.Abstract
     public interface IArticleService
     {
         Task<IDataResult<ArticleDto>> GetAsync(int articleId); //verilerimizi taşımak için oluşturduğumuz resul'ı veriyoruz.
+        Task<IDataResult<ArticleUpdateDto>> GetArticleUpdateDtoAsync(int articleId);
         Task<IDataResult<ArticleListDto>> GetAllAsync();
         Task<IDataResult<ArticleListDto>> GetAllByNonDeletedAsync();
         Task<IDataResult<ArticleListDto>> GetAllByNonDeletedAndActiveAsync();

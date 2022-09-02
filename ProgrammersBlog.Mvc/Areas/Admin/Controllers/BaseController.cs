@@ -8,11 +8,11 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
 {
     public class BaseController : Controller
     {
-        public BaseController(UserManager<User> userManager, IMapper mapper, IImageHelper ımageHelper)
+        public BaseController(UserManager<User> userManager, IMapper mapper, IImageHelper imageHelper)
         {
             UserManager = userManager;
             Mapper = mapper;
-            ImageHelper = ımageHelper;
+            ImageHelper = imageHelper;
         }
         protected UserManager<User> UserManager { get;}
         protected IMapper Mapper { get;}

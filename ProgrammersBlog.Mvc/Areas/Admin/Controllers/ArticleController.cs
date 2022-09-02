@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using ProgrammersBlog.Entities.ComplexTypes;
 using ProgrammersBlog.Entities.Concrete;
 using ProgrammersBlog.Entities.Dtos;
@@ -19,13 +20,13 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
     {
         private readonly IArticleService _articleService;
         private readonly ICategoryService _categoryService;
-        
+        private readonly IToastNotification _toastNotification;
 
-        public ArticleController(IArticleService articleService, ICategoryService categoryService, UserManager<User> userManager,IMapper mapper, IImageHelper imageHelper):base(userManager,mapper, imageHelper)
+        public ArticleController(IArticleService articleService, ICategoryService categoryService, UserManager<User> userManager, IMapper mapper, IImageHelper imageHelper, IToastNotification toastNotification) : base(userManager, mapper, imageHelper)
         {
             _articleService = articleService;
             _categoryService = categoryService;
-            
+            _toastNotification = toastNotification;
         }
 
         [HttpGet]
@@ -63,7 +64,10 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                 var result = await _articleService.AddAsync(articleAddDto, LoggedInUser.UserName, LoggedInUser.Id);
                 if (result.ResultStatus == ResultStatus.Success)
                 {
-                    TempData.Add("SuccessMessage", result.Message);
+                    _toastNotification.AddSuccessToastMessage(result.Message, new ToastrOptions
+                    {
+                        Title = "Başarılı İşlem"
+                    });
                     return RedirectToAction("Index", "Article");
                 }
                 else
@@ -99,7 +103,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             {
                 bool isNewThumbnailUploaded = false;
                 var oldThumbnail = articleUpdateViewModel.Thumbnail;
-                if(articleUpdateViewModel.Thumbnail != null)
+                if(articleUpdateViewModel.ThumbnailFile != null)
                 {
                     var uploadedImageResult = await ImageHelper.Upload(articleUpdateViewModel.Title, articleUpdateViewModel.ThumbnailFile, PictureType.Post);
                     articleUpdateViewModel.Thumbnail = uploadedImageResult.ResultStatus == ResultStatus.Success 
@@ -119,13 +123,17 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                     {
                         ImageHelper.Delete(oldThumbnail);
                     }
-                    TempData.Add("SuccessMessage", result.Message);
+                    _toastNotification.AddSuccessToastMessage(result.Message, new ToastrOptions
+                    {
+                        Title = "Başarılı İşlem"
+                    });
                     return RedirectToAction("Index", "Article");
                 }
                 else
                 {
                     ModelState.AddModelError("", result.Message);
                 }
+
             }
             var categories = await _categoryService.GetAllByNonDeletedAndActiveAsync();
             articleUpdateViewModel.Categories = categories.Data.Categories;//eğer bir hata alırsak ve view'i yenilersek categories kısmı dolmuyordu. bunun önüne geçer.

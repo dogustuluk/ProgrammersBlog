@@ -24,50 +24,60 @@
                 action: function (e, dt, node, config) {
                     $.ajax({
                         type: 'GET', //kategori listesi almayı istediğimiz için type ->GET
-                        url: '/Admin/Article/Index/',
+                        url: '/Admin/Article/GetAllArticles/',
                         contentType: "application/json",//hangi formatta çalıştığımız veriyoruz. xml'de verebiliriz.
                         //ajax işleminde yapacağımız işlemelere geçiyoruz
                         beforeSend: function () { //ajax işlemini yapmadan önce yapmamız gereken işlemler.Örnek-> tablonun gizlenmesi ve spinner kısmının aktif edilmesii
                             //tabloyu gizle ve spinner'ı aktif et yani görünür yap
-                            $('#usersTable').hide();
+                            $('#articlesTable').hide();
                             $('.spinner-border').show();
                         },
                         success: function (data) {
-                            const userListDto = jQuery.parseJSON(data);
+                            const articleResult = jQuery.parseJSON(data);
                             dataTable.clear();
-                            console.log(userListDto);
+                            console.log(articleResult);
                             //ResultStatus durumunu kontrol etmeliyiz.
-                            if (userListDto.ResultStatus === 0) { //üç eşittir hem değerin aynı olup olmadığını hem de değerin
+                            if (articleResult.Data.ResultStatus === 0) { //üç eşittir hem değerin aynı olup olmadığını hem de değerin
                                 //tipini kontrol eder. burada hem int hem de 0 olmasını istiyoruz. 0 ise başarılı
-                                $.each(userListDto.Users.$values, function (index, user) {
-                                const newTableRow = dataTable.row.add([
-                                        user.Id,
-                                        user.UserName,
-                                        user.Email,
-                                        user.PhoneNumber,
-                                        `<img src="/img/${user.Picture}" alt="${user.UserName}" class="my-image-table">`,
-                                `       
-                                    <button class="btn btn-primary btn-sm btn-update" data-id="${user.Id}"><span class="fas fa-edit"></span></button>
-                                    <button class="btn btn-danger btn-sm btn-delete" data-id="${user.Id}"><span class="fas fa-minus-circle"></span> </button>
-                                `
-                                ]).node();
+                                $.each(articleResult.Data.Articles.$values, function (index, article) {
+                                    const newArticle = getJsonNetObject(article, articleResult.Data.Articles.$values);
+                                    console.log(newArticle);
+                                    const newTableRow = dataTable.row.add([
+                                        newArticle.Id,
+                                        newArticle.Category.Name,
+                                        newArticle.Title,
+                                        `<img src="/img/${newArticle.Thumbnail}" alt="${newArticle.Title}" class="my-image-table" />`,
+                                        `${convertToShortDate(newArticle.Date)}`,
+                                        newArticle.ViewsCount,
+                                        newArticle.CommentCount,
+                                        `${newArticle.IsActive ? "Evet" : "Hayır"}`,
+                                        `${newArticle.IsDeleted ? "Evet" : "Hayır"}`,
+                                        `${convertToShortDate(newArticle.CreatedDate)}`,
+                                        newArticle.CreatedByName,
+                                        `${convertToShortDate(newArticle.ModifiedDate)}`,
+                                        newArticle.ModifiedByName,
+                                        `
+                                <button class="btn btn-primary btn-sm btn-update" data-id="${newArticle.Id}"><span class="fas fa-edit"></span></button>
+                                <button class="btn btn-danger btn-sm btn-delete" data-id="${newArticle.Id}"><span class="fas fa-minus-circle"></span></button>
+                                            `
+                                    ]).node();
                                     const jqueryTableRow = $(newTableRow);
-                                    jqueryTableRow.attr('name', `${user.Id}`);
+                                    jqueryTableRow.attr('name', `${newArticle.Id}`);
                                 });
                                 //devamında ise gelen veri ile tablodaki verinin yer değiştirmesi gerekir.
                                 dataTable.draw();
                                 $('.spinner-border').hide();
-                                $('#usersTable').fadeIn(1500);
+                                $('#articlesTable').fadeIn(1500);
                             }
                             else {
-                                toastr.error(`${userListDto.Message}`, 'İşlem Başarısız!');
+                                toastr.error(`${articleResult.Data.Message}`, 'İşlem Başarısız!');
 
                             }
                         },
                         error: function (err) {
                             console.log(err);
                             $('.spinner-border').hide();
-                            $('#usersTable').fadeIn(1000);
+                            $('#articlesTable').fadeIn(1000);
                             toastr.error(`${err.responseText}`, 'Hata!');
 
                         }

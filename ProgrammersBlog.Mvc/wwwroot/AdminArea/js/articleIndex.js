@@ -24,7 +24,7 @@
                 action: function (e, dt, node, config) {
                     $.ajax({
                         type: 'GET', //kategori listesi almayı istediğimiz için type ->GET
-                        url: '/Admin/User/GetAllUsers/',
+                        url: '/Admin/Article/Index/',
                         contentType: "application/json",//hangi formatta çalıştığımız veriyoruz. xml'de verebiliriz.
                         //ajax işleminde yapacağımız işlemelere geçiyoruz
                         beforeSend: function () { //ajax işlemini yapmadan önce yapmamız gereken işlemler.Örnek-> tablonun gizlenmesi ve spinner kısmının aktif edilmesii

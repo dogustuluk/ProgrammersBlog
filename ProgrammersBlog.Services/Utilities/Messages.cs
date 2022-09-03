@@ -57,5 +57,29 @@ namespace ProgrammersBlog.Services.Utilities
             }
 
         }
+        public static class Comment
+        {
+            public static string NotFound(bool isPlural)
+            {
+                if (isPlural) return "Herhangi bir yorum bulunamadı.";
+                return "Böyle bir yorum bulunamadı";
+            }
+            public static string Add(string createdByName)
+            {
+                return $"Sayın {createdByName}, yorumunuz başarılı bir şekilde eklenmiştir.";
+            }
+            public static string Delete(string createdByName)
+            {
+                return $"{createdByName} adlı kullanıcının yorumu başarıyla silinmiştir.";
+            }
+            public static string HardDelete(string createdByName)
+            {
+                return $"{createdByName} adlı kullanıcının yaptığı yorum kalıcı olarak başarılı bir şekilde silinmiştir.";
+            }
+            public static string Update(string createdByName)
+            {
+                return $"{createdByName} adlı kullanıcının yaptığı yorum başarıyla güncellenmiştir.";
+            }
+        }
     }
 }

@@ -63,9 +63,25 @@ namespace ProgrammersBlog.Services.Concrete
             }
         }
 
-        public Task<IDataResult<CommentDto>> DeleteAsync(int commentId, string modifiedByName)
+        public async Task<IDataResult<CommentDto>> DeleteAsync(int commentId, string modifiedByName)
         {
-            throw new NotImplementedException();
+            var comment = await _unitOfWork.Comments.GetAsync(c => c.Id == commentId);
+            if (comment != null)
+            {
+                comment.IsDeleted = true;
+                comment.ModifiedByName = modifiedByName;
+                comment.ModifiedDate = DateTime.Now;
+                var deletedComment = await _unitOfWork.Comments.UpdateAsync(comment);
+                await _unitOfWork.SaveAsync();
+                return new DataResult<CommentDto>(ResultStatus.Success, Messages.Comment.Delete(deletedComment.CreatedByName), new CommentDto
+                {
+                    Comment = deletedComment,
+                });
+            }
+            return new DataResult<CommentDto>(ResultStatus.Error, Messages.Comment.NotFound(isPlural: false), new CommentDto
+            {
+                Comment = null,
+            });
         }
 
         public Task<IDataResult<CommentListDto>> GetAllAsync()

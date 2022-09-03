@@ -84,24 +84,68 @@ namespace ProgrammersBlog.Services.Concrete
             });
         }
 
-        public Task<IDataResult<CommentListDto>> GetAllAsync()
+        public async Task<IDataResult<CommentListDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var comments = await _unitOfWork.Comments.GetAllAsync();
+            if (comments.Count > -1)
+            {
+                return new DataResult<CommentListDto>(ResultStatus.Success, new CommentListDto
+                {
+                    Comments = comments,
+                });
+            }
+            return new DataResult<CommentListDto>(ResultStatus.Error, Messages.Comment.NotFound(isPlural: true), new CommentListDto
+            {
+                Comments = null,
+            });
         }
 
-        public Task<IDataResult<CommentListDto>> GetAllBtNonDeletedAndActiveAsync()
+        public async Task<IDataResult<CommentListDto>> GetAllBtNonDeletedAndActiveAsync()
         {
-            throw new NotImplementedException();
+            var comments = await _unitOfWork.Comments.GetAllAsync(c => !c.IsDeleted && c.IsActive);
+            if (comments.Count > -1)
+            {
+                return new DataResult<CommentListDto>(ResultStatus.Success, new CommentListDto
+                {
+                    Comments = comments,
+                });
+            }
+            return new DataResult<CommentListDto>(ResultStatus.Error, Messages.Comment.NotFound(isPlural: true), new CommentListDto
+            {
+                Comments = null,
+            });
         }
 
-        public Task<IDataResult<CommentListDto>> GetAllByDeletedAsync()
+        public async Task<IDataResult<CommentListDto>> GetAllByDeletedAsync()
         {
-            throw new NotImplementedException();
+            var comments = await _unitOfWork.Comments.GetAllAsync(c => c.IsDeleted);
+            if (comments.Count > -1)
+            {
+                return new DataResult<CommentListDto>(ResultStatus.Success, new CommentListDto
+                {
+                    Comments= comments,
+                });
+            }
+            return new DataResult<CommentListDto>(ResultStatus.Error, Messages.Comment.NotFound(isPlural: true), new CommentListDto
+            {
+                Comments = null,
+            });
         }
 
-        public Task<IDataResult<CommentListDto>> GetAllByNonDeletedAsync()
+        public async Task<IDataResult<CommentListDto>> GetAllByNonDeletedAsync()
         {
-            throw new NotImplementedException();
+            var comments = await _unitOfWork.Comments.GetAllAsync(c => !c.IsDeleted);
+            if (comments.Count > -1)
+            {
+                return new DataResult<CommentListDto>(ResultStatus.Success, new CommentListDto
+                {
+                    Comments = comments,
+                });
+            }
+            return new DataResult<CommentListDto>(ResultStatus.Error, Messages.Comment.NotFound(isPlural:true), new CommentListDto 
+            { 
+                Comments = null,
+            });
         }
 
         public Task<IDataResult<CommentDto>> GetAsync(int commentId)

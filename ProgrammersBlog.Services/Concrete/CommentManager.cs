@@ -179,14 +179,29 @@ namespace ProgrammersBlog.Services.Concrete
             }
         }
 
-        public Task<IResult> HardDeleteAsync(int commentId)
+        public async Task<IResult> HardDeleteAsync(int commentId)
         {
-            throw new NotImplementedException();
+            var comment = await _unitOfWork.Comments.GetAsync(c => c.Id == commentId);
+            if (comment != null)
+            {
+                await _unitOfWork.Comments.DeleteAsync(comment);
+                await _unitOfWork.SaveAsync();
+                return new Result(ResultStatus.Success, Messages.Comment.Delete(comment.CreatedByName));
+            }
+            return new Result(ResultStatus.Error, Messages.Comment.NotFound(isPlural:false));
         }
 
-        public Task<IDataResult<CommentDto>> UpdateAsync(CommentUpdateDto commentUpdateDto, string modifiedByName)
+        public async Task<IDataResult<CommentDto>> UpdateAsync(CommentUpdateDto commentUpdateDto, string modifiedByName)
         {
-            throw new NotImplementedException();
+            var oldComment = await _unitOfWork.Comments.GetAsync(c => c.Id == commentUpdateDto.Id);
+            var comment = _mapper.Map<CommentUpdateDto, Comment>(commentUpdateDto, oldComment);
+            comment.ModifiedByName = modifiedByName;
+            var updatedComment = await _unitOfWork.Comments.UpdateAsync(comment);
+            await _unitOfWork.SaveAsync();
+            return new DataResult<CommentDto>(ResultStatus.Success, Messages.Comment.Update(comment.CreatedByName), new CommentDto
+            {
+                Comment = updatedComment,
+            });
         }
     }
 }

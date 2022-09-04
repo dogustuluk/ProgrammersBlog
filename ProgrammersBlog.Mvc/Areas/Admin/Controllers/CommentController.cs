@@ -21,9 +21,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
         public CommentController(UserManager<User> userManager, IMapper mapper, IImageHelper imageHelper, ICommentService commentService) : base(userManager, mapper, imageHelper)
         {
             _commentService = commentService;
-
         }
-
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -34,10 +32,30 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
         public async Task<IActionResult> GetAllComments()
         {
             var result = await _commentService.GetAllByNonDeletedAsync();
-            var commentResult = JsonSerializer.Serialize(result, new JsonSerializerOptions
+            var commentsResult = JsonSerializer.Serialize(result, new JsonSerializerOptions
             {
                 ReferenceHandler = ReferenceHandler.Preserve,
             });
+            return Json(commentsResult);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetDetail(int commentId)
+        {
+            var result = await _commentService.GetAsync(commentId);
+            if (result.ResultStatus == ResultStatus.Success)
+            {
+                return PartialView("_CommentDetailPartial", result.Data);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int commentId)
+        {
+            var result = await _commentService.DeleteAsync(commentId, LoggedInUser.UserName);
+            var commentResult = JsonSerializer.Serialize(result);
             return Json(commentResult);
         }
         [HttpGet]
@@ -63,23 +81,21 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                 {
                     var commentUpdateAjaxModel = JsonSerializer.Serialize(new CommentUpdateAjaxViewModel
                     {
-                        CommentUpdatePartial = await this.RenderViewToStringAsync("_CommentUpdatePartial",commentUpdateDto)
+                        CommentDto = result.Data,
+                        CommentUpdatePartial = await this.RenderViewToStringAsync("_CommentUpdatePartial", commentUpdateDto)
+                    }, new JsonSerializerOptions
+                    {
+                        ReferenceHandler = ReferenceHandler.Preserve
                     });
                     return Json(commentUpdateAjaxModel);
                 }
             }
             var commentUpdateAjaxErrorModel = JsonSerializer.Serialize(new CommentUpdateAjaxViewModel
             {
-                CommentUpdatePartial = await this.RenderViewToStringAsync("_CommentUpdatePartial",commentUpdateDto)
+                CommentUpdatePartial = await this.RenderViewToStringAsync("_CommentUpdatePartial", commentUpdateDto)
             });
             return Json(commentUpdateAjaxErrorModel);
         }
-        [HttpPost]
-        public async Task<IActionResult> Delete(int commentId)
-        {
-            var result = await _commentService.DeleteAsync(commentId, LoggedInUser.UserName);
-            var commentResult = JsonSerializer.Serialize(result);
-            return Json(commentResult);
-        }
+
     }
 }

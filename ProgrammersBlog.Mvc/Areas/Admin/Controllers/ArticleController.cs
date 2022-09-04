@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
@@ -28,7 +29,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             _categoryService = categoryService;
             _toastNotification = toastNotification;
         }
-
+        [Authorize(Roles = "SuperAdmin,Article.Read")]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -40,6 +41,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             }
             return NotFound();
         }
+        [Authorize(Roles = "SuperAdmin,Article.Create")]
         [HttpGet]
         public async Task<IActionResult> Add()
         {
@@ -53,6 +55,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             }
             return NotFound();
         }
+        [Authorize(Roles = "SuperAdmin,Article.Create")]
         [HttpPost]
         public async Task<IActionResult> Add(ArticleAddViewModel articleAddViewModel)
         {
@@ -79,6 +82,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             articleAddViewModel.Categories = categories.Data.Categories;//ModelState hatası ya da resultstatus hatası alırsak view'ü retürn ederken herhangi bir hata ile karşılaşmamış oluruz.
             return View(articleAddViewModel);
         }
+        [Authorize(Roles = "SuperAdmin,Article.Update")]
         [HttpGet]
         public async Task<IActionResult> Update(int articleId)
         {
@@ -96,6 +100,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                 return NotFound();
             }
         }
+        [Authorize(Roles = "SuperAdmin,Article.Update")]
         [HttpPost]
         public async Task<IActionResult> Update(ArticleUpdateViewModel articleUpdateViewModel)
         {
@@ -139,6 +144,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             articleUpdateViewModel.Categories = categories.Data.Categories;//eğer bir hata alırsak ve view'i yenilersek categories kısmı dolmuyordu. bunun önüne geçer.
             return View(articleUpdateViewModel);
         }
+        [Authorize(Roles = "SuperAdmin,Article.Delete")]
         [HttpPost]
         public async Task<JsonResult> Delete(int articleId)
         {
@@ -146,6 +152,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             var articleResult = JsonSerializer.Serialize(result);
             return Json(articleResult);
         }
+        [Authorize(Roles = "SuperAdmin,Article.Read")]
         [HttpGet]
         public async Task<JsonResult> GetAllArticles()
         {

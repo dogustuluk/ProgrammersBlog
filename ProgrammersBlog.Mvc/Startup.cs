@@ -40,8 +40,8 @@ namespace ProgrammersBlog.Mvc
             services.AddScoped<IImageHelper, ImageHelper>();
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = new PathString("/Admin/User/Login");//login için bu sayfaya yönlendiriyoruz.
-                options.LogoutPath = new PathString("/Admin/User/Logout");
+                options.LoginPath = new PathString("/Admin/Auth/Login");//login için bu sayfaya yönlendiriyoruz.
+                options.LogoutPath = new PathString("/Admin/Auth/Logout");
                 options.Cookie = new CookieBuilder
                 {
                     Name = "ProgrammersBlog",
@@ -51,7 +51,7 @@ namespace ProgrammersBlog.Mvc
                 };
                 options.SlidingExpiration = true;//kullanýcý sitemize giriþ yaptýktan sonra kullanýcýya tanýnan zamaný ifade eder.
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);//7 gün boyunca kullanýcýnýn tekrar giriþ yapmasý gerekmez.
-                options.AccessDeniedPath = new PathString("/Admin/User/AccessDenied");//yetkisi olmayan sayfalara girmeye çalýþtýðý zaman hangi sayfaya yönlendirileceðidir.
+                options.AccessDeniedPath = new PathString("/Admin/Auth/AccessDenied");//yetkisi olmayan sayfalara girmeye çalýþtýðý zaman hangi sayfaya yönlendirileceðidir.
             });
         }
 

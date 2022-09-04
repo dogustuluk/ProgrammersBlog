@@ -267,6 +267,12 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                 return Json(userUpdateModelStateErrorViewModel);
             }
         }
+        [HttpGet]
+        public async Task<PartialViewResult> GetDetail(int userId)
+        {
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            return PartialView("_GetDetailPartial", new UserDto { User = user });
+        }
         [Authorize]
         [HttpGet]
         public async Task<ViewResult> ChangeDetails()

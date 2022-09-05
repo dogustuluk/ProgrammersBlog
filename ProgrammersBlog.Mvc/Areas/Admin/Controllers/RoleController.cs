@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProgrammersBlog.Entities.Concrete;
 using ProgrammersBlog.Entities.Dtos;
+using ProgrammersBlog.Mvc.Areas.Admin.Models;
 using ProgrammersBlog.Mvc.Helpers.Abstract;
+using ProgrammersBlog.Shared.Utilities.Extensions;
+using ProgrammersBlog.Shared.Utilities.Results.ComplexTypes;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -65,6 +68,43 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
                 userRoleAssignDto.RoleAssignDtos.Add(roleAssignDto);
             }
             return PartialView("_RoleAssignPartial", userRoleAssignDto);
+        }
+        [Authorize(Roles = "SuperAdmin,User.Update")]
+        [HttpPost]
+        public async Task<IActionResult> Assign(UserRoleAssignDto userRoleAssignDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.Users.SingleOrDefaultAsync(u => u.Id == userRoleAssignDto.UserId);
+                foreach (var roleAssignDto in userRoleAssignDto.RoleAssignDtos)
+                {
+                    if (roleAssignDto.HasRole) await UserManager.AddToRoleAsync(user, roleAssignDto.RoleName);
+                    else
+                    {
+                        await UserManager.RemoveFromRoleAsync(user, roleAssignDto.RoleName);
+                    }
+                }
+                var userRoleAssignAjaxViewModel = JsonSerializer.Serialize(new UserRoleAssignAjaxViewModel
+                {
+                    UserDto = new UserDto
+                    {
+                        User = user,
+                        Message = $"{user.UserName} kullanıcısına ait rol atama işlemi başarıyla tamamlanmıştır.",
+                        ResultStatus = ResultStatus.Success
+                    },
+                    RoleAssignPartial = await this.RenderViewToStringAsync("_RoleAssignPartial", userRoleAssignDto)//render etmemizin sebebi -> kaydet butonuna bastıktan sonra model form'un kaybolmasını istemeyebiliriz. bundan dolayı yazıyoruz.
+                });
+                return Json(userRoleAssignAjaxViewModel);
+            }
+            else
+            {
+                var userRoleAssignAjaxErrorModel = JsonSerializer.Serialize(new UserRoleAssignAjaxViewModel
+                {
+                    RoleAssignPartial = await this.RenderViewToStringAsync("_RoleAssignPartial", userRoleAssignDto),
+                    UserRoleAssignDto = userRoleAssignDto
+                });
+                return Json(userRoleAssignAjaxErrorModel);
+            }
         }
     }
 }

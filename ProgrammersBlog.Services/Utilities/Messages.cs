@@ -26,9 +26,14 @@ namespace ProgrammersBlog.Services.Utilities
             public static string Delete(string categoryName)
             {
                 return $"{categoryName} adlı kategori başarıyla silinmiştir.";
-            } public static string HardDelete(string categoryName)
+            } 
+            public static string HardDelete(string categoryName)
             {
                 return $"{categoryName} adlı kategori başarıyla kalıcı bir şekilde silinmiştir.";
+            }
+            public static string UndoDelete(string categoryName)
+            {
+                return $"{categoryName} adlı kategori başarıyla arşivden geri getirilmiştir.";
             }
         }
         public static class Article
@@ -54,6 +59,10 @@ namespace ProgrammersBlog.Services.Utilities
             {
                 return $"{articleTitle} adlı makale başarıyla güncellendi.";
 
+            }
+            public static string UndoDelete(string articleTitle)
+            {
+                return $"{articleTitle} başlıklı makale başarıyla arşivden geri getirilmiştir.";
             }
 
         }
@@ -82,6 +91,10 @@ namespace ProgrammersBlog.Services.Utilities
             public static string Update(string createdByName)
             {
                 return $"{createdByName} adlı kullanıcının yaptığı yorum başarıyla güncellenmiştir.";
+            }
+            public static string UndoDelete(string createdByName)
+            {
+                return $"{createdByName} adlı kullanıcının eklediği yorum başarıyla arşivden geri getirilmiştir.";
             }
         }
     }

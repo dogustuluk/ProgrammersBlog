@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProgrammersBlog.Data.Abstract;
 using ProgrammersBlog.Data.Concrete;
@@ -33,6 +34,12 @@ namespace ProgrammersBlog.Services.Extensions
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+$#%"; //kullanıcı adı oluşturulurken kullanılan karakterler bütününü temsil eder. Özel karakterlerin bulunup bulunmadığını temsil eder.
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<ProgrammersBlogContext>();
+            serviceCollection.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.FromMinutes(15); /*
+                                                             * Eğer fazla sayıda kullanıcıya sahip isek asla Zero olarak vermemeliyiz. Çünkü bu  kod ile her saniye veri tabanına bir istek atmış oluyoruz. Genellikle 30dk kafi olmaktadır.
+                                                             */
+            });
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
             serviceCollection.AddScoped<ICategoryService, CategoryManager>();
             serviceCollection.AddScoped<IArticleService, ArticleManager>();

@@ -220,5 +220,23 @@ namespace ProgrammersBlog.Services.Concrete
             }
             return new Result(ResultStatus.Error, Messages.Article.NotFound(isPlural: false));
         }
+
+        public async Task<IDataResult<ArticleListDto>> GetAllByViewCountAsync(bool isAscending, int? takeSize)
+        {
+            //get
+            var articles = await UnitOfWork.Articles.GetAllAsync(a => a.IsActive && !a.IsDeleted, a => a.Category ,a => a.User);
+            //sorting
+            var sortedArticles = isAscending 
+                ? articles.OrderBy(a => a.ViewsCount) 
+                : articles.OrderByDescending(a => a.ViewsCount);
+            //takeSize
+            return new DataResult<ArticleListDto>(ResultStatus.Success, new ArticleListDto
+            {
+                Articles = takeSize == null 
+                ? sortedArticles.ToList() 
+                : sortedArticles.Take(takeSize.Value).ToList()
+            });
+
+        }
     }
 }

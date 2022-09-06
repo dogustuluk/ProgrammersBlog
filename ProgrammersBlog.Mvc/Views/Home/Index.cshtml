@@ -24,7 +24,7 @@
                     }
                     @(article.Content.Length > 250 ? article.Content.Substring(0,250) : article.Content)
             </p>
-            <a asp-controller="Article" asp-action="Detail" class="btn btn-primary">Devamını Oku &rarr;</a>
+            <a asp-controller="Article" asp-action="Detail"  asp-route-articleId="@article.Id" class="btn btn-primary">Devamını Oku &rarr;</a>
           </div>
           <div class="card-footer text-muted">
             @article.User.UserName tarafından @article.Date tarihinde paylaşıldı.

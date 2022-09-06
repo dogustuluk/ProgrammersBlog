@@ -12,10 +12,12 @@ public HomeController(IArticleService articleService)
             _articleService = articleService;
         }
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? categoryId)
         {
-            var articleListDto = await _articleService.GetAllByNonDeletedAndActiveAsync();
-            return View(articleListDto.Data);
+            var articlesResult = await (categoryId == null
+                ? _articleService.GetAllByNonDeletedAndActiveAsync()
+                : _articleService.GetAllByCategoryAsync(categoryId.Value));
+            return View(articlesResult.Data);
         }
     }
 }

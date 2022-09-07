@@ -18,7 +18,8 @@ namespace ProgrammersBlog.Services.Abstract
         Task<IDataResult<ArticleListDto>> GetAllByNonDeletedAndActiveAsync();
         Task<IDataResult<ArticleListDto>> GetAllByCategoryAsync(int categoryId);
         Task<IDataResult<ArticleListDto>> GetAllByDeletedAsync();
-        Task<IDataResult<ArticleListDto>> GetAllByViewCountAsync(bool isAscending, int? takeSize); 
+        Task<IDataResult<ArticleListDto>> GetAllByViewCountAsync(bool isAscending, int? takeSize);
+        Task<IDataResult<ArticleListDto>> GetAllByPagingAsync(int? categoryId, int currentPage = 1, int pageSize = 5, bool isAscending = false);
         Task<IResult> AddAsync(ArticleAddDto articleAddDto, string createdByName, int userId); //Dto nedir -> data transfer object olarak geçer. Bunları view model olarak düşünebiliriz. bunlar bizim frontend kısmında sadece ihtiyacımız olan alanları içermektedir.
         Task<IResult> UpdateAsync(ArticleUpdateDto articleUpdateDto, string modifiedByName);
         Task<IResult> DeleteAsync(int articleId, string modifiedByName);

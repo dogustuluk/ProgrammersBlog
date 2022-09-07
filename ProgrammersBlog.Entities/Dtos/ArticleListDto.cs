@@ -12,5 +12,6 @@ namespace ProgrammersBlog.Entities.Dtos
     public class ArticleListDto:DtoGetBase
     {
         public IList<Article> Articles { get; set; }
+        public int? CategoryId { get; set; }//rightsidebar'dan kategori seçebiliyoruz. Eğer oradan bir kategori seçilirse, sayfalama işlemini ilgili kategorinin id'sini göndererek yaparız.
     }
 }

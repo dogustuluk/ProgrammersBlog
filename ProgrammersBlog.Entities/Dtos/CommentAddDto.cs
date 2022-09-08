@@ -20,5 +20,6 @@ namespace ProgrammersBlog.Entities.Dtos
         [MaxLength (50, ErrorMessage ="{0} {1} karakterden büyük olmamalıdır!")]
         [MinLength (2, ErrorMessage ="{0} {1} karakterden küçük olmamalıdır!")]
         public string CreatedByName { get; set; }
+        public int ArticleId { get; set; }
     }
 }

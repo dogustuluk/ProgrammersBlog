@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LinqKit;
+using Microsoft.EntityFrameworkCore;
 using ProgrammersBlog.Shared.Data.Abstract;
 using ProgrammersBlog.Shared.Entities.Abstract;
 using System;
@@ -80,10 +81,14 @@ namespace ProgrammersBlog.Shared.Data.Concrete.EntityFramework
             //filter add
             if (predicates.Any())
             {
+                var predicateChain = PredicateBuilder.New<TEntity>();
                 foreach (var predicate in predicates)
                 {
-                    query = query.Where(predicate);
+                    //predicate1 && predicate2 && predicateN şeklinde olur ama biz arama işlemini "veya" operatörü ile yapmak istiyoruz. Dolayısıyla linqkit nuget paketini ekliyoruz. 
+                    //query = query.Where(predicate); "ve" operatörü ile işlemi tamamlar.
+                    predicateChain.Or(predicate); //predicate1 || predicate2 || predicateN
                 }
+                query = query.Where(predicateChain);
             }
             //property add
             if (includeProperties.Any())

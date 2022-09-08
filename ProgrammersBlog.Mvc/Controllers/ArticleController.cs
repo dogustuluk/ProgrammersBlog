@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProgrammersBlog.Mvc.Models;
 using ProgrammersBlog.Services.Abstract;
 using ProgrammersBlog.Shared.Utilities.Results.ComplexTypes;
 using System.Threading.Tasks;
@@ -14,9 +15,18 @@ namespace ProgrammersBlog.Mvc.Controllers
             _articleService = articleService;
         }
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Search(string keyword, int currentPage = 1, int pageSize = 5, bool isAscneding = false)
         {
-            return View();
+            var searchResult = await _articleService.SearchAsync(keyword, currentPage, pageSize, isAscneding);
+            if (searchResult.ResultStatus == ResultStatus.Success)
+            {
+                return View(new ArticleSearchViewModel
+                {
+                    ArticleListDto = searchResult.Data,
+                    Keyword = keyword //farklı sayfalarda gezinmemiz gerekiyorsa buradaki keyword'ün tutulması gerekir ki arama başarılı bir şekilde devam edebilsin
+                });
+            }
+            return NotFound();
         }
         [HttpGet]
         public async Task<IActionResult> Detail(int articleId)

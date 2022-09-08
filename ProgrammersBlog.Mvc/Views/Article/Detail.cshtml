@@ -1,4 +1,5 @@
-﻿@model ProgrammersBlog.Entities.Dtos.ArticleDto
+﻿@using ProgrammersBlog.Entities.Dtos
+@model ProgrammersBlog.Entities.Dtos.ArticleDto
 @{
     Layout = "_ArticleLayout";
     ViewBag.Title = Model.Article.Title;
@@ -35,18 +36,10 @@
             </p>
 
         <!-- Comments Form -->
-        <div class="card my-4">
-          <h5 class="card-header">Bir Yorum Ekle:</h5>
-          <div class="card-body">
-            <form>
-              <div class="form-group">
-                <textarea class="form-control" rows="3"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Ekle</button>
-            </form>
-          </div>
-        </div>
 
+       <partial name="~/Views/Comment/_CommentAddPartial.cshtml" model="new CommentAddDto{ArticleId = Model.Article.Id}"/>
+
+       <div class="comments">
        @foreach(var comment in Model.Article.Comments)
     {
          <!-- Single Comment -->
@@ -58,4 +51,5 @@
           </div>
         </div>
     }
+    </div>
 </div>

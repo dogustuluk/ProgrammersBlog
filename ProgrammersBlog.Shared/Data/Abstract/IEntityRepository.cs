@@ -20,6 +20,10 @@ namespace ProgrammersBlog.Shared.Data.Abstract
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);
         Task DeleteAsync(T entity);
+        Task<IList<T>> SearchAsync(IList<Expression<Func<T,bool>>> predicates, params Expression<Func<T,object>>[] includeProperties); /*IList predicates eklememizin sebebi-> 
+                                                                                 *buradaki predicate'leri servis katmanında ayrı ayrı eklemek isteyebiliriz. Yani belirli kontrolleri yaptıktan sonra isteyebiliriz.
+                                                                                 *Bunu istememizin sebebine örnek vermek gerekirse -> 6 farklı parametre alabiliriz ve bunlar opsiyonel olabilir. yani hepsi de gelebilir 1 tanesi de gelebilir. dolayısıyla burada tek bir predicate ile alırsak bunu "&" operatörü ile göndermeye çalışırsak problem yaşarız. Her bir olasılığı kontrol etmek yerine böyle bir predicate'in olup olmadığını kontrol etmek daha doğru bir yol olacaktır.
+                                                                                 */
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
         Task<int> CountAsync(Expression<Func<T, bool>> predicate = null);//null ile predicate vermezsek ilgili tablonun, sınıfın tüm verilerinin sayısını dönmesini sağlarız.
     }

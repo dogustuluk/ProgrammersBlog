@@ -6,7 +6,7 @@
             <form asp-controller="Comment" asp-action="Add" method="post" id="form-comment-add">
                 <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
               <div asp-validation-summary="All" class="text-danger" id="validation-summary" 
-              aria-hidden="true" style="display:none;">
+                aria-hidden="true" style="display:none;">
               </div>
               <input asp-for="ArticleId" type="hidden" />
               <div class="form-group">

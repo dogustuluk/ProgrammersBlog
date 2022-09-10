@@ -28,13 +28,13 @@ namespace ProgrammersBlog.Mvc.Controllers
         [HttpGet]
         public IActionResult About()
         {
-           // throw new Exception("Hata!");
+            throw new Exception("Hata!");
             return View(_aboutUsPageInfo);
         }
         [HttpGet]
         public IActionResult Contact()
         {
-           // throw new NullReferenceException();
+            throw new NullReferenceException();
             return View();
         }
             [HttpPost]

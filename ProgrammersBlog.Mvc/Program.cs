@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace ProgrammersBlog.Mvc
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }).ConfigureLogging(logging =>
+                {/*
+                  * NLog kullanmak istediðimiz için diðer provider'larý(logger'larý) deaktive et.
+                  */
+                    logging.ClearProviders();
+                }).UseNLog();//MvcExceptionFilter içerisinde logger'ý kullan.
     }
 }

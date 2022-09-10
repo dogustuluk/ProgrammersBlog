@@ -28,15 +28,16 @@ namespace ProgrammersBlog.Mvc.Controllers
         [HttpGet]
         public IActionResult About()
         {
-            throw new Exception("Hata");
+            throw new Exception("Hata!");
             return View(_aboutUsPageInfo);
         }
         [HttpGet]
         public IActionResult Contact()
         {
+            throw new NullReferenceException();
             return View();
         }
-        [HttpPost]
+            [HttpPost]
         public IActionResult Contact(EmailSendDto emailSendDto)
         {
             return View();

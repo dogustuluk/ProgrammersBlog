@@ -19,6 +19,7 @@ namespace ProgrammersBlog.Data.Concrete.EntityFramework.Contexts
         //{
         //    optionsBuilder.UseSqlServer(connectionString: @"Data Source=DESKTOP-1C9EMR6;Initial Catalog=ProgrammersBlogDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         //}
+        public DbSet<Log> Logs { get; set; }
         public ProgrammersBlogContext(DbContextOptions<ProgrammersBlogContext>options):base(options)
         {
 
@@ -35,7 +36,7 @@ namespace ProgrammersBlog.Data.Concrete.EntityFramework.Contexts
             modelBuilder.ApplyConfiguration(new UserLoginMap());
             modelBuilder.ApplyConfiguration(new UserRoleMap());
             modelBuilder.ApplyConfiguration(new UserTokenMap());
-
+            modelBuilder.ApplyConfiguration(new LogMap());
         }
     }
 }

@@ -56,6 +56,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" crossorigin="anonymous"></script>
 
     @await RenderSectionAsync("Scripts",false) 
+    @await Component.InvokeAsync("NToastNotify")
+
 </body>
 
 </html>

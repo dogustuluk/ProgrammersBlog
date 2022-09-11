@@ -19,7 +19,7 @@ namespace ProgrammersBlog.Services.Extensions
     {
         public static IServiceCollection LoadMyServices(this IServiceCollection serviceCollection, string connectionString)
         {
-            serviceCollection.AddDbContext<ProgrammersBlogContext>(options => options.UseSqlServer(connectionString));
+            serviceCollection.AddDbContext<ProgrammersBlogContext>(options => options.UseSqlServer(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)); //bu kod ile bu dbcontext'i kullanan tüm uygulama için bu değişiklik gerçekleşmiş olur.
             serviceCollection.AddIdentity<User, Role>(options =>
             {
                 //User Password Options

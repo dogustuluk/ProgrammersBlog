@@ -18,6 +18,7 @@ namespace ProgrammersBlog.Shared.Data.Concrete.EntityFramework
         public EfEntityRepositoryBase(DbContext context)
         {
             _context = context;
+            //_context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;//AsNoTracking
         }
 
         public async Task<TEntity> AddAsync(TEntity entity)
@@ -58,7 +59,7 @@ namespace ProgrammersBlog.Shared.Data.Concrete.EntityFramework
                     query = query.Include(includeProperty);
                 }
             }
-            return await query.ToListAsync();
+            return await query.AsNoTracking().ToListAsync();
         }
 
         public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
@@ -72,7 +73,7 @@ namespace ProgrammersBlog.Shared.Data.Concrete.EntityFramework
                     query = query.Include(includeProperty);
                 }
             }
-            return await query.FirstOrDefaultAsync();
+            return await query.AsNoTracking().SingleOrDefaultAsync(); //firstAsync var ise asNoTracking yavaşlamaya sebebiyet verecektir.
         }
 
         public async Task<IList<TEntity>> SearchAsync(IList<Expression<Func<TEntity, bool>>> predicates, params Expression<Func<TEntity, object>>[] includeProperties)
@@ -99,7 +100,8 @@ namespace ProgrammersBlog.Shared.Data.Concrete.EntityFramework
                 }
             }
 
-            return await query.ToListAsync();
+            return await query.AsNoTracking().ToListAsync();//eğer makalenin kategorisini include edersek, ilgili kategorinin de makaleleri ekstra bir sorgu olarak geri dönmeyecek AsNoTracking ile.
+            //Bu şekilde birbirine referans olan değerlerin tekrar etmesini engellemiş oluyor olucaz.
         }
 
         public async Task<TEntity> UpdateAsync(TEntity entity)

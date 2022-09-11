@@ -127,7 +127,7 @@ namespace ProgrammersBlog.Mvc.Areas.Admin.Controllers
             var categoriesResult = await _categoryService.GetAllByNonDeletedAndActiveAsync();
             var articleRightSideBarWidgetOptionsViewModel = _mapper.Map<ArticleRightSideBarWidgetOptionsViewModel>(_articleRightSideBarWidgetOptions);
             articleRightSideBarWidgetOptionsViewModel.Categories = categoriesResult.Data.Categories;
-            return View(_articleRightSideBarWidgetOptions);
+            return View(articleRightSideBarWidgetOptionsViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> ArticleRightSideBarWidgetSettings(ArticleRightSideBarWidgetOptionsViewModel articleRightSideBarWidgetOptionsViewModel)

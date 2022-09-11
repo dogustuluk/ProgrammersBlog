@@ -18,7 +18,21 @@ namespace ProgrammersBlog.Mvc
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args).ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                config.Sources.Clear();
+                //çalýþma ortamýný alma
+                var env = hostingContext.HostingEnvironment;
+                //json dosyalarýný ekleme
+                config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json",optional:true,reloadOnChange:true);//appsettings.development.json
+                //çalýþma ortamý deðiþkenlerini ekleme
+                config.AddEnvironmentVariables();
+                if (args != null)
+                {
+                    config.AddCommandLine(args);
+                }
+            })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

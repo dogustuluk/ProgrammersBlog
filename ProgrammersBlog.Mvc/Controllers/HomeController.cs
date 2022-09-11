@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using NToastNotify;
 using ProgrammersBlog.Entities.Concrete;
 using ProgrammersBlog.Entities.Dtos;
 using ProgrammersBlog.Services.Abstract;
@@ -12,10 +13,14 @@ namespace ProgrammersBlog.Mvc.Controllers
     {
         private readonly IArticleService _articleService;
         private readonly AboutUsPageInfo _aboutUsPageInfo;
-        public HomeController(IArticleService articleService, IOptions<AboutUsPageInfo> aboutUsPageInfo)
+        private readonly IMailService _mailService;
+        private readonly IToastNotification _toastNotification;
+        public HomeController(IArticleService articleService, IOptions<AboutUsPageInfo> aboutUsPageInfo, IMailService mailService, IToastNotification toastNotification)
         {
             _articleService = articleService;
             _aboutUsPageInfo = aboutUsPageInfo.Value;
+            _mailService = mailService;
+            _toastNotification = toastNotification;
         }
         [HttpGet]
         public async Task<IActionResult> Index(int? categoryId, int currentPage = 1, int pageSize = 5, bool isAscending = false)
@@ -40,7 +45,16 @@ namespace ProgrammersBlog.Mvc.Controllers
             [HttpPost]
         public IActionResult Contact(EmailSendDto emailSendDto)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var result = _mailService.SendContactEmail(emailSendDto);
+                _toastNotification.AddSuccessToastMessage(result.Message, new ToastrOptions
+                {
+                    Title = "Başarılı İşlem!"
+                });
+                return View();
+            }
+            return View(emailSendDto);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ProgrammersBlog.Shared.Utilities.Results.Abstract;
+﻿using ProgrammersBlog.Shared.Entities.Concrete;
+using ProgrammersBlog.Shared.Utilities.Results.Abstract;
 using ProgrammersBlog.Shared.Utilities.Results.ComplexTypes;
 using System;
 using System.Collections.Generic;
@@ -15,18 +16,26 @@ namespace ProgrammersBlog.Shared.Utilities.Results.Concrete
             ResultStatus = resultStatus;
             Data = data;
         }
-        public DataResult(ResultStatus resultStatus, string message ,T data)
+        public DataResult(ResultStatus resultStatus, T data, IEnumerable<ValidationError> validationErrors)
+        {
+            ResultStatus = resultStatus;
+            Data = data;
+            ValidationErrors = validationErrors;
+        }
+        public DataResult(ResultStatus resultStatus, string message ,T data, IEnumerable<ValidationError> validationErrors)
         {
             ResultStatus = resultStatus;
             Message = message;
             Data = data;
+            ValidationErrors = validationErrors;
         }
-        public DataResult(ResultStatus resultStatus, string message, T data, Exception exception)
+        public DataResult(ResultStatus resultStatus, string message, T data, Exception exception, IEnumerable<ValidationError> validationErrors)
         {
             ResultStatus = resultStatus;
             Message = message;
             Data = data;
             Exception = exception;
+            ValidationErrors = validationErrors;
         }
         public T Data { get; }
 
@@ -35,5 +44,6 @@ namespace ProgrammersBlog.Shared.Utilities.Results.Concrete
         public string Message { get; }
 
         public Exception Exception { get; }
+        public IEnumerable<ValidationError> ValidationErrors { get; set; }
     }
 }

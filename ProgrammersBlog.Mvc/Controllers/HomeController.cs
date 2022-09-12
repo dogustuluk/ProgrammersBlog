@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ProgrammersBlog.Mvc.Controllers
 {
+    [Route("/")]
     public class HomeController : Controller
     {
         private readonly IArticleService _articleService;
@@ -25,6 +26,9 @@ namespace ProgrammersBlog.Mvc.Controllers
             _toastNotification = toastNotification;
             _aboutUsPageInfoWriter = aboutUsPageInfoWriter;
         }
+        [Route("index")]
+        [Route("anasayfa")]
+        [Route("")]//default bir action 
         [HttpGet]
         public async Task<IActionResult> Index(int? categoryId, int currentPage = 1, int pageSize = 5, bool isAscending = false)
         {
@@ -33,6 +37,8 @@ namespace ProgrammersBlog.Mvc.Controllers
                 : _articleService.GetAllByPagingAsync(categoryId.Value, currentPage, pageSize, isAscending));
             return View(articlesResult.Data);
         }
+        [Route("hakkimizda")]
+        [Route("hakkinda")]
         [HttpGet]
         public IActionResult About()
         {
@@ -40,13 +46,15 @@ namespace ProgrammersBlog.Mvc.Controllers
             
             return View(_aboutUsPageInfo);
         }
+        [Route("iletisim")]
         [HttpGet]
         public IActionResult Contact()
         {
             //throw new NullReferenceException();
             return View();
         }
-            [HttpPost]
+        [Route("iletisim")]
+        [HttpPost]
         public IActionResult Contact(EmailSendDto emailSendDto)
         {
             if (ModelState.IsValid)

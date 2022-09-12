@@ -17,6 +17,7 @@ namespace ProgrammersBlog.Services.Abstract
         /*makalenin ihtiyaçlarımız halinde kategorisini,yorumlarını veya kullanıcısını çekebiliriz.*/
         Task<IDataResult<ArticleUpdateDto>> GetArticleUpdateDtoAsync(int articleId);
         Task<IDataResult<ArticleListDto>> GetAllAsync();
+        Task<IDataResult<ArticleListDto>> GetAllAsyncV2(int? categoryId, int? userId, bool? isActive, bool? isDeleted, int currentPage, int pageSize, OrderByGeneral orderBy, bool isAscending, bool includeCategory, bool includeComments, bool includeUser);//paging işlemi gerekmiyorsa GetAllAsyncV2WithoutPaging operasyonu kodlamak daha doğru olur.
         Task<IDataResult<ArticleListDto>> GetAllByNonDeletedAsync();
         Task<IDataResult<ArticleListDto>> GetAllByNonDeletedAndActiveAsync();
         Task<IDataResult<ArticleListDto>> GetAllByCategoryAsync(int categoryId);

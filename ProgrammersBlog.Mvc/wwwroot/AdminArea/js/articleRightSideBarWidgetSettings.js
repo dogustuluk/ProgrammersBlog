@@ -46,7 +46,12 @@
             showAnim: "drop",
             showOptions: {direction:"left"},
             /*minDate: -3,*/ //şuanki tarihten bir gün öncesine kadar seçim yapabilir
-            maxDate:0
+            maxDate: 0,
+
+            /*bitiş tarihinin başlangıç tarihinden küçük olmaması için yapılacaklar*/
+            onSelect: function (selectedDate) {
+                $("#endAtDatePicker").datepicker('option', 'minDate', selectedDate || getTodaysDate);
+            }
         
         });
 

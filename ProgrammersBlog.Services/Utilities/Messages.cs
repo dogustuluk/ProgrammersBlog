@@ -8,6 +8,13 @@ namespace ProgrammersBlog.Services.Utilities
 {
     public static class Messages
     {
+        public static class General
+        {
+            public static string ValidationError()
+            {
+                return $"Bir veya daha fazla validasyon hatası ile karşılaşıldı.";
+            }
+        }
         public static class Category
         {
             public static string NotFound(bool isPlural)
@@ -26,7 +33,7 @@ namespace ProgrammersBlog.Services.Utilities
             public static string Delete(string categoryName)
             {
                 return $"{categoryName} adlı kategori başarıyla silinmiştir.";
-            } 
+            }
             public static string HardDelete(string categoryName)
             {
                 return $"{categoryName} adlı kategori başarıyla kalıcı bir şekilde silinmiştir.";
@@ -42,6 +49,11 @@ namespace ProgrammersBlog.Services.Utilities
             {
                 if (isPlural) return "Herhangi bir makale bulunamadı.";
                 return "Böyle bir makale bulunamadı";
+            }
+            public static string NotFoundById(int articleId)
+            {
+
+                return $"{articleId} makale koduna sahip bir makale bulunamadı.";
             }
             public static string Add(string articleTitle)
             {
@@ -80,7 +92,8 @@ namespace ProgrammersBlog.Services.Utilities
             public static string Approve(int commentId)
             {
                 return $"{commentId} nolu yorum başarıyla onaylanmıştır.";
-            } public static string Add(string createdByName)
+            }
+            public static string Add(string createdByName)
             {
                 return $"Sayın {createdByName}, yorumunuz başarılı bir şekilde eklenmiştir.";
             }
@@ -102,4 +115,6 @@ namespace ProgrammersBlog.Services.Utilities
             }
         }
     }
+
+
 }

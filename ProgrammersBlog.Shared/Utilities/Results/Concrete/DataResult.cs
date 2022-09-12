@@ -22,6 +22,12 @@ namespace ProgrammersBlog.Shared.Utilities.Results.Concrete
             Data = data;
             ValidationErrors = validationErrors;
         }
+        public DataResult(ResultStatus resultStatus, string message, T data)
+        {
+            ResultStatus = resultStatus;
+            Message = message;
+            Data = data;
+        }
         public DataResult(ResultStatus resultStatus, string message ,T data, IEnumerable<ValidationError> validationErrors)
         {
             ResultStatus = resultStatus;
@@ -37,6 +43,14 @@ namespace ProgrammersBlog.Shared.Utilities.Results.Concrete
             Exception = exception;
             ValidationErrors = validationErrors;
         }
+        public DataResult(ResultStatus resultStatus, string message, T data, Exception exception)
+        {
+            ResultStatus = resultStatus;
+            Message = message;
+            Data = data;
+            Exception = exception;
+        }
+
         public T Data { get; }
 
         public ResultStatus ResultStatus { get; }

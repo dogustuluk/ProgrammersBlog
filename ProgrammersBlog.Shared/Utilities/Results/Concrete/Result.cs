@@ -25,6 +25,13 @@ namespace ProgrammersBlog.Shared.Utilities.Results.Concrete
             ResultStatus = resultStatus;
             Message = message;
         }
+        public Result(ResultStatus resultStatus, string message, Exception exception)
+        {
+            ResultStatus = resultStatus;
+            Message = message;
+            Exception = exception;
+        }
+
         public Result(ResultStatus resultStatus, string message, IEnumerable<ValidationError> validationErrors)
         {
             ResultStatus = resultStatus;

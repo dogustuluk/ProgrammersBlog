@@ -13,6 +13,8 @@ namespace ProgrammersBlog.Services.Abstract
     public interface IArticleService
     {
         Task<IDataResult<ArticleDto>> GetAsync(int articleId); //verilerimizi taşımak için oluşturduğumuz resul'ı veriyoruz.
+        Task<IDataResult<ArticleDto>> GetByIdAsync(int articleId, bool includeCategory, bool includeComments, bool includeUser);//GetAsyncV2 için.
+        /*makalenin ihtiyaçlarımız halinde kategorisini,yorumlarını veya kullanıcısını çekebiliriz.*/
         Task<IDataResult<ArticleUpdateDto>> GetArticleUpdateDtoAsync(int articleId);
         Task<IDataResult<ArticleListDto>> GetAllAsync();
         Task<IDataResult<ArticleListDto>> GetAllByNonDeletedAsync();

@@ -96,6 +96,16 @@ namespace ProgrammersBlog.Mvc
                     areaName: "Admin",
                     pattern: "Admin/{controller=home}/{action=Index}/{id?}"
                     ); //sadece bir adet area olacaðý için MapAreaControllerRoute kullandýk. farklý arealar var ise->MapControllerRoute kullan.
+                /*conventional route*/
+                endpoints.MapControllerRoute
+                (
+                    name:"article", //route'a verilecek olan isim.
+                    pattern:"Makaleler/{title}/{articleId}", /*buradaki routing'in neye göre çalýþacaðý.
+                                                   * makale baþlýðý / makale id -> ayný baþlýklý birden fazla makale olabileceði için id'sini de ekliyoruz.
+                                                   */
+                    defaults:new {controller = "Article", action = "Detail"}
+                );
+
                 endpoints.MapDefaultControllerRoute();
             });
         }

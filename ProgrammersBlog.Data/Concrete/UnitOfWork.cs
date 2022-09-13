@@ -22,12 +22,12 @@ namespace ProgrammersBlog.Data.Concrete
         {
             _context = context;
         }
+        /*??= -> ifadesi ile repository'lerimizin çalışma durumunu transient yerine scoped olarak değiştiriyoruz.*/
+        public IArticleRepository Articles => _articleRepository ??= new EfArticleRepository(_context);
 
-        public IArticleRepository Articles => _articleRepository ?? new EfArticleRepository(_context);
+        public ICategoryRepository Categories => _categoryRepository ??= new EfCategoryRepository(_context);
 
-        public ICategoryRepository Categories => _categoryRepository ?? new EfCategoryRepository(_context);
-
-        public ICommentRepository Comments => _commentRepository ?? new EfCommentRepository(_context);
+        public ICommentRepository Comments => _commentRepository ??= new EfCommentRepository(_context);
 
         public async ValueTask DisposeAsync()
         {

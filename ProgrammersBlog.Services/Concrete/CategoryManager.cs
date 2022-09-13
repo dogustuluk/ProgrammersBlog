@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ProgrammersBlog.Data.Abstract;
 using ProgrammersBlog.Entities.Concrete;
 using ProgrammersBlog.Entities.Dtos;
@@ -25,6 +26,11 @@ namespace ProgrammersBlog.Services.Concrete
 
         public async Task<IDataResult<CategoryDto>> GetAsync(int categoryId)
         {
+            //queryable
+            var query = UnitOfWork.Categories.GetAsQueryable();
+            query.Include(c => c.Articles).ThenInclude(a => a.Comments);
+            //queryable
+
             var category = await UnitOfWork.Categories.GetAsync(c => c.Id == categoryId);
             if (category != null)
             {

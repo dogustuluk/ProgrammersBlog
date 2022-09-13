@@ -35,5 +35,6 @@ namespace ProgrammersBlog.Shared.Data.Abstract
                                                                                  */
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
         Task<int> CountAsync(Expression<Func<T, bool>> predicate = null);//null ile predicate vermezsek ilgili tablonun, sınıfın tüm verilerinin sayısını dönmesini sağlarız.
+        IQueryable<T> GetAsQueryable();
     }
 }

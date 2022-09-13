@@ -82,6 +82,11 @@ namespace ProgrammersBlog.Shared.Data.Concrete.EntityFramework
             return await query.AsNoTracking().ToListAsync();
         }
 
+        public IQueryable<TEntity> GetAsQueryable()
+        {
+            return _context.Set<TEntity>().AsQueryable();
+        }
+
         public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
         {
             IQueryable<TEntity> query = _context.Set<TEntity>();
